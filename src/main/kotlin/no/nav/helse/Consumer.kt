@@ -56,8 +56,7 @@ class Consumer(
     }
 
     private fun handleMessages(value: String) {
-        TODO()
-
+        logger.info(value)
     }
 
     private fun closeResources(lastException: Exception?) {
