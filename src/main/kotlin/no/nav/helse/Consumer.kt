@@ -1,10 +1,12 @@
 package no.nav.helse
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.slf4j.LoggerFactory
 import org.apache.kafka.clients.consumer.ConsumerRecords
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.errors.WakeupException
 import org.apache.kafka.common.serialization.StringDeserializer
+import java.io.File
 import java.time.Duration
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
@@ -55,8 +57,10 @@ class Consumer(
         consumer.wakeup()
     }
 
+    private val objectMapper = jacksonObjectMapper()
+
     private fun handleMessages(value: String) {
-        logger.info(value)
+        JsonSchemaValidator().kaSomHelst(objectMapper.readTree(value))
     }
 
     private fun closeResources(lastException: Exception?) {

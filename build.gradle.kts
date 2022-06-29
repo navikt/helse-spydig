@@ -2,6 +2,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val kafkaVersion = "3.1.0"
 val ktorVersion = "2.0.2"
+val jsonSchemaValidatorVersion = "1.0.70"
+
 
 plugins {
     kotlin("jvm") version "1.6.21"
@@ -33,6 +35,8 @@ dependencies {
     implementation("io.ktor:ktor-server-call-logging:$ktorVersion")
     implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
+    implementation("com.networknt:json-schema-validator:$jsonSchemaValidatorVersion")
+
 
     api("io.micrometer:micrometer-registry-prometheus:1.9.0")
 
