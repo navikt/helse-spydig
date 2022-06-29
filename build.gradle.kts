@@ -1,5 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+val kafkaVersion = "3.1.0"
+
 plugins {
     kotlin("jvm") version "1.6.21"
     application
@@ -14,6 +16,9 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+    implementation("org.apache.kafka:kafka-clients:$kafkaVersion")
+    implementation("org.slf4j:slf4j-api:1.7.36")
+
 }
 
 tasks.test {
