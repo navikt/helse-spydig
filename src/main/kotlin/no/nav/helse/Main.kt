@@ -1,3 +1,5 @@
+package no.nav.helse
+
 import io.ktor.http.*
 import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*
@@ -12,18 +14,13 @@ import io.ktor.server.routing.*
 import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import io.prometheus.client.exporter.common.TextFormat
-import no.nav.helse.Config
-import no.nav.helse.Consumer
-import no.nav.helse.ConsumerRunner
-import org.apache.kafka.clients.consumer.KafkaConsumer
-import org.apache.kafka.common.serialization.StringDeserializer
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 
 var logger: Logger = LoggerFactory.getLogger("Application")
 
-fun main(args: Array<String>) {
+fun main() {
     val config = Config.fromEnv()
 
     val app = Consumer(config)
