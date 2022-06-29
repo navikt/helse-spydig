@@ -15,7 +15,7 @@ class ConsumerRunner (
 ) {
 
     private val logger = LoggerFactory.getLogger(config.appName)
-    private val consumer = Consumer(config)
+    private val consumer = Consumer(config, config.topic)
     private val ktor = builder(config.appName, consumer::isRunning)
 
     fun startBlocking() {

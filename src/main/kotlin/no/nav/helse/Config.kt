@@ -9,7 +9,7 @@ import java.util.*
 class Config(
     val appName: String,
     val bootstrapServers: List<String>,
-    val quizTopic: String,
+    val topic: String,
     val consumerGroup: String,
     private val kafkaTrustStorePath: String?,
     private val kafkaKeyStorePath: String?,

@@ -11,7 +11,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class Consumer(
     private val config: Config,
-    private val etterlevelseTopic: String = "omrade-helse-etterlevelse-topic",
     clientId: String = UUID.randomUUID().toString().slice(1..5),
     private val run: Consumer.(records: ConsumerRecords<String, String>) -> Unit = {}
 ) {
@@ -22,7 +21,7 @@ class Consumer(
     private fun consumeMessages() {
         var lastException: Exception? = null
         try {
-            consumer.subscribe(listOf(etterlevelseTopic))
+            consumer.subscribe(listOf(config.topic))
             while (running.get()) {
                 consumer.poll(Duration.ofSeconds(1)).also { records ->
 
