@@ -10,18 +10,15 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 
 class Consumer(
-    private val etterlevelseTopic: String = "omrade-helse-etterlevelse-topic",
     private val config: Config,
+    private val etterlevelseTopic: String = "omrade-helse-etterlevelse-topic",
     clientId: String = UUID.randomUUID().toString().slice(1..5),
     private val run: Consumer.(records: ConsumerRecords<String, String>) -> Unit = {}
-
 ) {
-
-    private val consumer = KafkaConsumer(config.consumerConfig(clientId, config.consumerGroup, config.autoCommit), StringDeserializer(), StringDeserializer())
+    private val consumer = KafkaConsumer(config.consumerConfig(clientId, config.consumerGroup), StringDeserializer(), StringDeserializer())
     private val running = AtomicBoolean(false)
     private val logger = LoggerFactory.getLogger(Consumer::class.java)
-
-
+    internal fun isRunning() = running.get()
     private fun consumeMessages() {
         var lastException: Exception? = null
         try {
@@ -45,6 +42,18 @@ class Consumer(
         } finally {
             closeResources(lastException)
         }
+    }
+
+    fun start() {
+        logger.info("starting QuizRapid")
+        if (running.getAndSet(true)) return logger.info("QuizRapid already started")
+        consumeMessages()
+    }
+
+    fun stop() {
+        logger.info("stopping QuizRapid")
+        if (!running.getAndSet(false)) return logger.info("rapid already stopped")
+        consumer.wakeup()
     }
 
     private fun handleMessages(value: String) {
