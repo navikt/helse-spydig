@@ -5,7 +5,6 @@
     import com.networknt.schema.JsonSchema
     import com.networknt.schema.JsonSchemaFactory
     import com.networknt.schema.SpecVersion
-    import com.networknt.schema.ValidationMessage
     import java.net.URI
 
     class JsonSchemaValidator {
@@ -16,7 +15,7 @@
 
         fun JsonSchema.validateMessage(json: JsonNode) {
             val valideringsfeil = validate(json)
-            if (emptySet<ValidationMessage>() == valideringsfeil) { logger.info("Fant en feil \n ${json.toPrettyString()}\n ") }
+            if (valideringsfeil.isNotEmpty()) { logger.info("Fant en feil:\n $valideringsfeil") }
         }
 
         fun validateJSON(message: JsonNode) {
