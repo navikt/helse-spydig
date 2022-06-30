@@ -13,13 +13,18 @@
             .getInstance(SpecVersion.VersionFlag.V7)
             .getSchema(URI.create("https://raw.githubusercontent.com/navikt/helse/main/subsumsjon/json-schema-1.0.0.json"))
 
-        fun JsonSchema.validateMessage(json: JsonNode) {
+        fun JsonSchema.validateMessage(json: JsonNode): Boolean {
             val valideringsfeil = validate(json)
-            if (valideringsfeil.isNotEmpty()) { logger.info("Fant en feil:\n $valideringsfeil") }
-            else {logger.info("Fant ikke en feil :)) ")}
+            if (valideringsfeil.isNotEmpty()) {
+                logger.info("Fant en feil:\n $valideringsfeil")
+                return false
+            }
+            else {
+                return true
+            }
         }
 
-        fun validateJSON(message: JsonNode) {
-            schema.validateMessage(message)
+        fun isJSONvalid(message: JsonNode): Boolean {
+            return schema.validateMessage(message)
         }
 }

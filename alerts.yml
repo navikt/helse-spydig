@@ -1,0 +1,18 @@
+apiVersion: "nais.io/v1"
+kind: "Alert"
+metadata:
+  name: helse-spydig
+  namespace: tbd
+  labels:
+    team: tbd
+spec:
+  receivers: # receivers for all alerts below
+    slack:
+      channel: '#spydig-test'
+      prependText: '<!here> | ' # this text will be prepended to the Slack alert title
+  alerts:
+    - alert: schema validering feilet
+      expr: increase(validation_errors[1m]) > 0
+      for: 1m
+      description: "validering av schema feilet"
+      action: "spis en kanelbolle"

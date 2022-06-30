@@ -1,11 +1,12 @@
 package no.nav.helse
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import org.slf4j.LoggerFactory
+import io.prometheus.client.Counter
 import org.apache.kafka.clients.consumer.ConsumerRecords
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.errors.WakeupException
 import org.apache.kafka.common.serialization.StringDeserializer
+import org.slf4j.LoggerFactory
 import java.time.Duration
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
@@ -18,6 +19,11 @@ class Consumer(
     private val consumer = KafkaConsumer(config.consumerConfig(clientId, config.consumerGroup), StringDeserializer(), StringDeserializer())
     private val running = AtomicBoolean(false)
     private val logger = LoggerFactory.getLogger(Consumer::class.java)
+
+    val requests: Counter = Counter.build()
+        .name("validation_errors").help("Total errors.").register()
+
+
     internal fun isRunning() = running.get()
     private fun consumeMessages() {
         var lastException: Exception? = null
@@ -45,14 +51,14 @@ class Consumer(
     }
 
     fun start() {
-        logger.info("starting QuizRapid")
-        if (running.getAndSet(true)) return logger.info("QuizRapid already started")
+        logger.info("starting spydig")
+        if (running.getAndSet(true)) return logger.info("spydig already started")
         consumeMessages()
     }
 
     fun stop() {
-        logger.info("stopping QuizRapid")
-        if (!running.getAndSet(false)) return logger.info("rapid already stopped")
+        logger.info("stopping spydig")
+        if (!running.getAndSet(false)) return logger.info("spydig already stopped")
         consumer.wakeup()
     }
 
@@ -60,7 +66,9 @@ class Consumer(
 
     private fun handleMessages(value: String) {
         logger.info(value)
-        JsonSchemaValidator().validateJSON(objectMapper.readTree(value))
+        if (!JsonSchemaValidator().isJSONvalid(objectMapper.readTree(value))) {
+           requests.inc()
+        }
     }
 
     private fun closeResources(lastException: Exception?) {
