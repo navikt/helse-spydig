@@ -6,12 +6,13 @@
     import com.networknt.schema.JsonSchemaFactory
     import com.networknt.schema.SpecVersion
     import com.networknt.schema.ValidationMessage
+    import java.net.URI
 
     class JsonSchemaValidator {
 
-        val schema = JsonSchemaFactory
+        private val schema = JsonSchemaFactory
             .getInstance(SpecVersion.VersionFlag.V7)
-            .getSchema("https://raw.githubusercontent.com/navikt/helse/main/subsumsjon/json-schema-1.0.0.json")
+            .getSchema(URI.create("https://raw.githubusercontent.com/navikt/helse/main/subsumsjon/json-schema-1.0.0.json"))
 
         fun JsonSchema.validateMessage(json: JsonNode) {
             val valideringsfeil = validate(json)
