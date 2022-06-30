@@ -16,6 +16,7 @@
         fun JsonSchema.validateMessage(json: JsonNode) {
             val valideringsfeil = validate(json)
             if (valideringsfeil.isNotEmpty()) { logger.info("Fant en feil:\n $valideringsfeil") }
+            else {logger.info("Fant ikke en feil :)) ")}
         }
 
         fun validateJSON(message: JsonNode) {
