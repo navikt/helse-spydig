@@ -17,14 +17,11 @@ import io.prometheus.client.exporter.common.TextFormat
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-
 var logger: Logger = LoggerFactory.getLogger("Application")
 
 fun main() {
     val config = Config.fromEnv()
-
     val app = Consumer(config)
-
     ConsumerRunner(config, ::ktorServer, app).startBlocking()
 }
 
@@ -50,10 +47,6 @@ fun ktorServer(appName: String, isReady: () -> Boolean): ApplicationEngine = emb
             registry = appMicrometerRegistry
         }
 
-        /**
-         * Konfigurasjon av endepunkt
-         */
-
         routing {
 
             get("/") {
@@ -67,7 +60,6 @@ fun ktorServer(appName: String, isReady: () -> Boolean): ApplicationEngine = emb
                 call.respondText("Hello")
             }
 
-
             get("/metrics") {
                 call.respondTextWriter(ContentType.parse(TextFormat.CONTENT_TYPE_004)) {
                     appMicrometerRegistry.scrape(this)
@@ -77,11 +69,10 @@ fun ktorServer(appName: String, isReady: () -> Boolean): ApplicationEngine = emb
             get("/isalive") {
                 call.respondText("OK")
             }
+
             get("/isready") {
                 if (isReady()) call.respondText("OK") else call.respond(HttpStatusCode.ServiceUnavailable)
             }
-
         }
     }
-
 })

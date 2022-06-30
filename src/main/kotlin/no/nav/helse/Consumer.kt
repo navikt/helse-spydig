@@ -6,7 +6,6 @@ import org.apache.kafka.clients.consumer.ConsumerRecords
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.errors.WakeupException
 import org.apache.kafka.common.serialization.StringDeserializer
-import java.io.File
 import java.time.Duration
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
@@ -60,7 +59,8 @@ class Consumer(
     private val objectMapper = jacksonObjectMapper()
 
     private fun handleMessages(value: String) {
-        JsonSchemaValidator().kaSomHelst(objectMapper.readTree(value))
+        logger.info(value)
+        JsonSchemaValidator().validateJSON(objectMapper.readTree(value))
     }
 
     private fun closeResources(lastException: Exception?) {
