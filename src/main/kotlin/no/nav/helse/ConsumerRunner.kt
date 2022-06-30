@@ -10,12 +10,12 @@ import org.slf4j.LoggerFactory
 class ConsumerRunner (
     config: Config,
     builder: (String, () -> Boolean) -> ApplicationEngine,
-    consumer: Consumer,
+    private val consumer: Consumer,
     run: Consumer.(records: ConsumerRecords<String, String>) -> Unit = {}
 ) {
 
     private val logger = LoggerFactory.getLogger(config.appName)
-    private val consumer = Consumer(config, config.topic)
+    //private val consumer = Consumer(config, config.topic)
     private val ktor = builder(config.appName, consumer::isRunning)
 
     fun startBlocking() {

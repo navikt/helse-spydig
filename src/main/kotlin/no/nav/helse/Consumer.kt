@@ -21,7 +21,7 @@ class Consumer(
     private val logger = LoggerFactory.getLogger(Consumer::class.java)
 
     val requests: Counter = Counter.build()
-        .name("nora_validation_error").help("Total errors.").register()
+        .name("validation_errors").help("Total errors.").register()
 
 
     internal fun isRunning() = running.get()
