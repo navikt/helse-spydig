@@ -6,10 +6,7 @@ metadata:
   labels:
     team: tbd
 spec:
-  service:
-    protocol: http
-  ingresses:
-    - https://helse-spydig.dev.intern.nav.no
+
   image: {{image}}
   port: 8080
   strategy:
@@ -23,6 +20,8 @@ spec:
   replicas:
     max: 1
     min: 1
+  ingresses:
+      - https://helse-spydig.dev.intern.nav.no
   kafka:
     pool: nav-dev
   prometheus:
