@@ -23,7 +23,7 @@ class Consumer(
     private val logger = LoggerFactory.getLogger(Consumer::class.java)
 
     val requests: Counter = Counter.build()
-        .name("validation_errors").help("Total errors.").register(appMicrometerRegistry.prometheusRegistry)
+        .name("spydig_validation_errors").help("Total errors.").register(appMicrometerRegistry.prometheusRegistry)
 
 
     internal fun isRunning() = running.get()
