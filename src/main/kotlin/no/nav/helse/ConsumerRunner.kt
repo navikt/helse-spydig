@@ -1,22 +1,21 @@
 package no.nav.helse
 
 import io.ktor.server.engine.*
+import io.micrometer.prometheus.PrometheusMeterRegistry
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.apache.kafka.clients.consumer.ConsumerRecords
 import org.slf4j.LoggerFactory
 
 class ConsumerRunner (
     config: Config,
-    builder: (String, () -> Boolean) -> ApplicationEngine,
-    private val consumer: Consumer,
-    run: Consumer.(records: ConsumerRecords<String, String>) -> Unit = {}
+    builder: (String, () -> Boolean, PrometheusMeterRegistry) -> ApplicationEngine,
+    appMicrometerRegistry: PrometheusMeterRegistry,
 ) {
 
     private val logger = LoggerFactory.getLogger(config.appName)
-    //private val consumer = Consumer(config, config.topic)
-    private val ktor = builder(config.appName, consumer::isRunning)
+    private val consumer = Consumer(config, config.topic, appMicrometerRegistry)
+    private val ktor = builder(config.appName, consumer::isRunning, appMicrometerRegistry)
 
     fun startBlocking() {
         runBlocking { start() }

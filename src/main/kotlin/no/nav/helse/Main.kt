@@ -20,12 +20,12 @@ import org.slf4j.LoggerFactory
 var logger: Logger = LoggerFactory.getLogger("Application")
 
 fun main() {
+    val appMicrometerRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
     val config = Config.fromEnv()
-    val app = Consumer(config)
-    ConsumerRunner(config, ::ktorServer, app).startBlocking()
+    ConsumerRunner(config, ::ktorServer, appMicrometerRegistry).startBlocking()
 }
 
-fun ktorServer(appName: String, isReady: () -> Boolean): ApplicationEngine = embeddedServer(CIO, applicationEngineEnvironment {
+fun ktorServer(appName: String, isReady: () -> Boolean, appMicrometerRegistry: PrometheusMeterRegistry): ApplicationEngine = embeddedServer(CIO, applicationEngineEnvironment {
 
     /**
      * Konfigurasjon av Webserver (Ktor https://ktor.io/)
@@ -42,7 +42,6 @@ fun ktorServer(appName: String, isReady: () -> Boolean): ApplicationEngine = emb
                 call.request.path().startsWith("/hello")
             }
         }
-        val appMicrometerRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
         install(MicrometerMetrics) {
             registry = appMicrometerRegistry
         }

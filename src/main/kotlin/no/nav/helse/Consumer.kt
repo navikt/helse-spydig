@@ -1,6 +1,7 @@
 package no.nav.helse
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import io.micrometer.prometheus.PrometheusMeterRegistry
 import io.prometheus.client.Counter
 import org.apache.kafka.clients.consumer.ConsumerRecords
 import org.apache.kafka.clients.consumer.KafkaConsumer
@@ -14,14 +15,15 @@ import java.util.concurrent.atomic.AtomicBoolean
 class Consumer(
     private val config: Config,
     clientId: String = UUID.randomUUID().toString().slice(1..5),
-    private val run: Consumer.(records: ConsumerRecords<String, String>) -> Unit = {}
-) {
+    appMicrometerRegistry: PrometheusMeterRegistry,
+    private val run: Consumer.(records: ConsumerRecords<String, String>) -> Unit = {},
+    ) {
     private val consumer = KafkaConsumer(config.consumerConfig(clientId, config.consumerGroup), StringDeserializer(), StringDeserializer())
     private val running = AtomicBoolean(false)
     private val logger = LoggerFactory.getLogger(Consumer::class.java)
 
     val requests: Counter = Counter.build()
-        .name("validation_errors").help("Total errors.").register()
+        .name("validation_errors").help("Total errors.").register(appMicrometerRegistry.prometheusRegistry)
 
 
     internal fun isRunning() = running.get()
