@@ -36,4 +36,6 @@ class ConsumerRunner (
             logger.info("ktor shutdown complete: end of life. goodbye.")
         }
     }
+
+
 }
