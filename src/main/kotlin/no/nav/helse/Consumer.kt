@@ -21,7 +21,7 @@ class Consumer(
     private val logger = LoggerFactory.getLogger(Consumer::class.java)
 
     val requests: Counter = Counter.build()
-        .name("requests_total").help("Total requests.").register()
+        .name("validation_errors_total").help("Total errors.").register()
 
 
     internal fun isRunning() = running.get()
