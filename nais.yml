@@ -6,6 +6,10 @@ metadata:
   labels:
     team: tbd
 spec:
+  service:
+    protocol: http
+  ingresses:
+    - https://helse-spydig.dev.intern.nav.no
   image: {{image}}
   port: 8080
   strategy:
