@@ -1,10 +1,10 @@
 apiVersion: "nais.io/v1"
 kind: "Alert"
 metadata:
-  name: nais-testapp
-  namespace: aura
+  name: helse-spydig
+  namespace: tbd
   labels:
-    team: aura
+    team: tbd
 spec:
   receivers: # receivers for all alerts below
     slack:
