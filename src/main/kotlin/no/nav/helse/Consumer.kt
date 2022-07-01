@@ -35,12 +35,12 @@ class Consumer(
             var counter = 0
             while (running.get()) {
 
-                consumer.poll(Duration.ofSeconds(1)).also { records ->
+                consumer.poll(Duration.ofSeconds(0)).also { records ->
                     records.forEach {
                         handleMessages(it.value())
                         counter++
                     }
-                    //run(records)
+                    run(records)
                     //participant.messages().forEach { publish(it.json()) }
                 }
             }
