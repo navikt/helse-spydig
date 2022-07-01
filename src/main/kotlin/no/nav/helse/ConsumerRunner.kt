@@ -1,21 +1,19 @@
 package no.nav.helse
 
 import io.ktor.server.engine.*
-import io.micrometer.prometheus.PrometheusMeterRegistry
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 
-class ConsumerRunner (
+class ConsumerRunner(
     config: Config,
-    builder: (String, () -> Boolean, PrometheusMeterRegistry) -> ApplicationEngine,
-    appMicrometerRegistry: PrometheusMeterRegistry,
+    builder: (String, () -> Boolean) -> ApplicationEngine,
 ) {
 
     private val logger = LoggerFactory.getLogger(config.appName)
-    private val consumer = Consumer(config, config.topic, appMicrometerRegistry)
-    private val ktor = builder(config.appName, consumer::isRunning, appMicrometerRegistry)
+    private val consumer = Consumer(config, config.topic)
+    private val ktor = builder(config.appName, consumer::isRunning)
 
     fun startBlocking() {
         runBlocking { start() }
@@ -35,6 +33,4 @@ class ConsumerRunner (
             logger.info("ktor shutdown complete: end of life. goodbye.")
         }
     }
-
-
 }

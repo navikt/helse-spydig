@@ -11,8 +11,10 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.micrometer.core.instrument.Clock.*
 import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
+import io.prometheus.client.CollectorRegistry.defaultRegistry
 import io.prometheus.client.exporter.common.TextFormat
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -20,59 +22,70 @@ import org.slf4j.LoggerFactory
 var logger: Logger = LoggerFactory.getLogger("Application")
 
 fun main() {
-    val appMicrometerRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
     val config = Config.fromEnv()
-    ConsumerRunner(config, ::ktorServer, appMicrometerRegistry).startBlocking()
+    ConsumerRunner(config, ::ktorServer).startBlocking()
 }
 
-fun ktorServer(appName: String, isReady: () -> Boolean, appMicrometerRegistry: PrometheusMeterRegistry): ApplicationEngine = embeddedServer(CIO, applicationEngineEnvironment {
+fun ktorServer(appName: String, isReady: () -> Boolean): ApplicationEngine =
+    embeddedServer(CIO, applicationEngineEnvironment {
 
-    /**
-     * Konfigurasjon av Webserver (Ktor https://ktor.io/)
-     */
-    log = logger
-    connector {
-        port = 8080
-    }
-    module {
-        install(ContentNegotiation) { jackson() }
-        install(CallLogging) {
-            disableDefaultColors()
-            filter { call ->
-                call.request.path().startsWith("/hello")
-            }
+        /**
+         * Konfigurasjon av Webserver (Ktor https://ktor.io/)
+         */
+
+
+        val appMicrometerRegistry = defaultRegistry
+        log = logger
+        connector {
+            port = 8080
         }
-        install(MicrometerMetrics) {
-            registry = appMicrometerRegistry
-        }
-
-        routing {
-
-            get("/") {
-                call.respondText(
-                    "<html><h1>$appName</h1><html>",
-                    ContentType.Text.Html
-                )
-            }
-
-            get("/hello") {
-                call.respondText("Hello")
-            }
-
-            get("/metrics") {
-                call.respondTextWriter(ContentType.parse(TextFormat.CONTENT_TYPE_004)) {
-                    appMicrometerRegistry.scrape(this)
+        module {
+            install(ContentNegotiation) { jackson() }
+            install(CallLogging) {
+                disableDefaultColors()
+                filter { call ->
+                    call.request.path().startsWith("/hello")
                 }
             }
+            install(MicrometerMetrics) {
+//            registry = appMicrometerRegistry
 
-            get("/isalive") {
-                call.respondText("OK")
+                registry = PrometheusMeterRegistry(
+                    PrometheusConfig.DEFAULT,
+                    appMicrometerRegistry,
+                    SYSTEM
+                )
+
             }
 
-            get("/isready") {
-                call.respondText("OK")
+            routing {
+
+                get("/") {
+                    call.respondText(
+                        "<html><h1>$appName</h1><html>",
+                        ContentType.Text.Html
+                    )
+                }
+
+                get("/hello") {
+                    call.respondText("Hello")
+                }
+
+
+                get("/metrics") {
+
+                    call.respondTextWriter(ContentType.parse(TextFormat.CONTENT_TYPE_004)) {
+                        TextFormat.write004(this, appMicrometerRegistry.metricFamilySamples())
+                    }
+                }
+                get("/isalive") {
+                    call.respondText("OK")
+                }
+
+                get("/isready") {
+                    call.respondText("OK")
 //              if (isReady()) call.respondText("OK") else call.respond(HttpStatusCode.ServiceUnavailable)
+                }
             }
         }
-    }
-})
+    })

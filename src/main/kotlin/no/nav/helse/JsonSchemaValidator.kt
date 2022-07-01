@@ -18,12 +18,13 @@ class JsonSchemaValidator {
             logger.info("Fant en feil:\n $valideringsfeil")
             false
         } else {
-            logger.info("Fant ikke feil")
+            logger.info("Fant ikke feil valideringsfeil:\n $valideringsfeil")
             true
         }
     }
 
     fun isJSONvalid(message: JsonNode): Boolean {
+        logger.info("Sjekker melding schema")
         return schema.validateMessage(message)
     }
 }
