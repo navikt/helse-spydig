@@ -40,7 +40,7 @@ class Consumer(
                         handleMessages(it.value())
                         counter++
                     }
-                    run(records)
+                    //run(records)
                     //participant.messages().forEach { publish(it.json()) }
                 }
             }
