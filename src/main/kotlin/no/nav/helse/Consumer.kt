@@ -2,6 +2,7 @@ package no.nav.helse
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.prometheus.client.Counter
+import org.apache.kafka.clients.consumer.ConsumerRecords
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.errors.WakeupException
 import org.apache.kafka.common.serialization.StringDeserializer
@@ -12,7 +13,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class Consumer(
     private val config: Config,
-    clientId: String = UUID.randomUUID().toString().slice(1..5)
+    clientId: String = UUID.randomUUID().toString().slice(1..5),
+    private val run: Consumer.(records: ConsumerRecords<String, String>) -> Unit = {},
 ) {
     private val consumer =
         KafkaConsumer(config.consumerConfig(clientId, config.consumerGroup), StringDeserializer(), StringDeserializer())
@@ -30,14 +32,21 @@ class Consumer(
         var lastException: Exception? = null
         try {
             consumer.subscribe(listOf(config.topic))
-
+            var counter = 0
             while (running.get()) {
+
                 consumer.poll(Duration.ofSeconds(1)).also { records ->
                     records.forEach {
                         handleMessages(it.value())
+                        counter++
                     }
+                    run(records)
+                    //participant.messages().forEach { publish(it.json()) }
                 }
             }
+            logger.info("antall meldinger: $counter")
+
+
         } catch (err: WakeupException) {
             // throw exception if we have not been told to stop
             if (running.get()) throw err
@@ -64,7 +73,7 @@ class Consumer(
     private val objectMapper = jacksonObjectMapper()
 
     private fun handleMessages(value: String) {
-        logger.info(value)
+//        logger.info(value)
         if (!validator.isJSONvalid(objectMapper.readTree(value))) {
             requests.inc()
             logger.info("counter increased by one to ${requests.get()}")
