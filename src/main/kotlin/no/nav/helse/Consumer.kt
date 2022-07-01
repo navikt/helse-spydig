@@ -15,17 +15,16 @@ class Consumer(
     private val config: Config,
     clientId: String = UUID.randomUUID().toString().slice(1..5),
     private val run: Consumer.(records: ConsumerRecords<String, String>) -> Unit = {},
-    ) {
-    private val consumer = KafkaConsumer(config.consumerConfig(clientId, config.consumerGroup), StringDeserializer(), StringDeserializer())
+) {
+    private val consumer =
+        KafkaConsumer(config.consumerConfig(clientId, config.consumerGroup), StringDeserializer(), StringDeserializer())
     private val running = AtomicBoolean(false)
     private val logger = LoggerFactory.getLogger(Consumer::class.java)
 
-    companion object{
-        private val requests: Counter = Counter.build()
+    companion object {
+        private val requests = Counter.build()
             .name("spydig_validation_errors").help("Total errors.").register()
     }
-
-
 
     internal fun isRunning() = running.get()
     private fun consumeMessages() {
