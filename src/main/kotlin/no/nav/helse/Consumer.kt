@@ -31,9 +31,9 @@ class Consumer(
         var lastException: Exception? = null
         try {
             consumer.subscribe(listOf(config.topic))
+
             while (running.get()) {
                 consumer.poll(Duration.ofSeconds(1)).also { records ->
-
                     records.forEach {
                         handleMessages(it.value())
                     }
