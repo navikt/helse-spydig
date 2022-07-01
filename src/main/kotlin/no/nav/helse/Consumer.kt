@@ -32,21 +32,14 @@ class Consumer(
         var lastException: Exception? = null
         try {
             consumer.subscribe(listOf(config.topic))
-            var counter = 0
             while (running.get()) {
-
                 consumer.poll(Duration.ofSeconds(1)).also { records ->
                     records.forEach {
                         handleMessages(it.value())
-                        counter++
                     }
 
                 }
-                logger.info("antall meldinger: $counter")
-
             }
-
-
         } catch (err: WakeupException) {
             // throw exception if we have not been told to stop
             if (running.get()) throw err
