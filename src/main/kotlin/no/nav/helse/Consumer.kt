@@ -13,8 +13,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class Consumer(
     private val config: Config,
-    clientId: String = UUID.randomUUID().toString().slice(1..5),
-    private val run: Consumer.(records: ConsumerRecords<String, String>) -> Unit = {},
+    clientId: String = UUID.randomUUID().toString().slice(1..5)
 ) {
     private val consumer =
         KafkaConsumer(config.consumerConfig(clientId, config.consumerGroup), StringDeserializer(), StringDeserializer())
@@ -65,9 +64,13 @@ class Consumer(
 
     private val objectMapper = jacksonObjectMapper()
 
+
     private fun handleMessages(value: String) {
+        val message = objectMapper.readTree(value)
 //        logger.info(value)
-        if (!validator.isJSONvalid(objectMapper.readTree(value))) {
+        if (!validator.isJSONvalid(message)) {
+            logger.info("det var ${message["kilde"]} som var synderen ")
+
             requests.inc()
             //logger.info("counter increased by one to ${requests.get()}")
         }
