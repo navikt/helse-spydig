@@ -69,7 +69,7 @@ class Consumer(
     private fun handleMessages(value: String) {
         val message = objectMapper.readTree(value)
         if (!validator.isJSONvalid(message)) {
-            requests.inc()
+            requests.labels("spleis", "spedisjon").inc()
         }
     }
 
