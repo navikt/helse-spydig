@@ -31,13 +31,19 @@ class Consumer(
     private fun consumeMessages() {
         var lastException: Exception? = null
         try {
+            logger.info("henter meldinger")
             consumer.subscribe(listOf(config.topic))
 
             while (running.get()) {
+                logger.info("spydig kjører")
                 consumer.poll(Duration.ofSeconds(1)).also { records ->
+                    var counter = 0
                     records.forEach {
+                        counter++
                         handleMessages(it.value())
                     }
+                    logger.info("leste $counter meldinger")
+
                     run(records)
                     //participant.messages().forEach { publish(it.json()) }
                 }
