@@ -18,7 +18,6 @@ class JsonSchemaValidator {
             logger.info("Fant en feil:\n $valideringsfeil")
             false
         } else {
-            logger.info("Fant ikke feil valideringsfeil:\n $valideringsfeil")
             true
         }
     }

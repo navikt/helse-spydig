@@ -29,17 +29,13 @@ class Consumer(
     private fun consumeMessages() {
         var lastException: Exception? = null
         try {
-            logger.info("henter meldinger")
             consumer.subscribe(listOf(config.topic))
 
             while (running.get()) {
                 consumer.poll(Duration.ofSeconds(1)).also { records ->
-                    var counter = 0
                     records.forEach {
-                        counter++
                         handleMessages(it.value())
                     }
-                    logger.info("leste $counter meldinger")
                 }
             }
         } catch (err: WakeupException) {

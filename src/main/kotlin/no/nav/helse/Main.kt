@@ -48,8 +48,6 @@ fun ktorServer(appName: String, isReady: () -> Boolean): ApplicationEngine =
                 }
             }
             install(MicrometerMetrics) {
-//            registry = appMicrometerRegistry
-
                 registry = PrometheusMeterRegistry(
                     PrometheusConfig.DEFAULT,
                     appMicrometerRegistry,
@@ -84,7 +82,6 @@ fun ktorServer(appName: String, isReady: () -> Boolean): ApplicationEngine =
 
                 get("/isready") {
                     call.respondText("OK")
-//              if (isReady()) call.respondText("OK") else call.respond(HttpStatusCode.ServiceUnavailable)
                 }
             }
         }
