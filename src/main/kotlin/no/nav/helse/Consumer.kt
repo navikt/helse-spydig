@@ -74,7 +74,7 @@ class Consumer(
     private val objectMapper = jacksonObjectMapper()
 
     private fun handleMessages(value: String) {
-//        logger.info(value)
+        logger.info(value)
         if (!validator.isJSONvalid(objectMapper.readTree(value))) {
             requests.inc()
             logger.info("counter increased by one to ${requests.get()}")
