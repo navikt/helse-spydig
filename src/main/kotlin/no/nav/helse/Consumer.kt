@@ -2,7 +2,6 @@ package no.nav.helse
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.prometheus.client.Counter
-import org.apache.kafka.clients.consumer.ConsumerRecords
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.errors.WakeupException
 import org.apache.kafka.common.serialization.StringDeserializer
@@ -67,12 +66,8 @@ class Consumer(
 
     private fun handleMessages(value: String) {
         val message = objectMapper.readTree(value)
-//        logger.info(value)
         if (!validator.isJSONvalid(message)) {
-            logger.info("det var ${message["kilde"]} som var synderen ")
-
             requests.inc()
-            //logger.info("counter increased by one to ${requests.get()}")
         }
     }
 
