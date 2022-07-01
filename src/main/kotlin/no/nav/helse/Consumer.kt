@@ -20,6 +20,7 @@ class Consumer(
         KafkaConsumer(config.consumerConfig(clientId, config.consumerGroup), StringDeserializer(), StringDeserializer())
     private val running = AtomicBoolean(false)
     private val logger = LoggerFactory.getLogger(Consumer::class.java)
+    private val validator = JsonSchemaValidator()
 
     companion object {
         private val requests = Counter.build()
@@ -68,7 +69,7 @@ class Consumer(
 
     private fun handleMessages(value: String) {
 //        logger.info(value)
-        if (!JsonSchemaValidator().isJSONvalid(objectMapper.readTree(value))) {
+        if (!validator.isJSONvalid(objectMapper.readTree(value))) {
             requests.inc()
             logger.info("counter increased by one to ${requests.get()}")
         }
