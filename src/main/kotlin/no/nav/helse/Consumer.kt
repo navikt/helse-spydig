@@ -22,7 +22,7 @@ class Consumer(
     private val running = AtomicBoolean(false)
     private val logger = LoggerFactory.getLogger(Consumer::class.java)
 
-    val requests: Counter = Counter.build()
+    private val requests: Counter = Counter.build()
         .name("spydig_validation_errors").help("Total errors.").register(appMicrometerRegistry.prometheusRegistry)
 
 
@@ -67,9 +67,10 @@ class Consumer(
     private val objectMapper = jacksonObjectMapper()
 
     private fun handleMessages(value: String) {
-        logger.info(value)
+//        logger.info(value)
         if (!JsonSchemaValidator().isJSONvalid(objectMapper.readTree(value))) {
-           requests.inc()
+            requests.inc()
+            logger.info("counter increased by one to ${requests.get()}")
         }
     }
 
