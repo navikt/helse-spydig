@@ -69,7 +69,6 @@ fun ktorServer(appName: String, isReady: () -> Boolean): ApplicationEngine =
                     call.respondText("Hello")
                 }
 
-
                 get("/metrics") {
 
                     call.respondTextWriter(ContentType.parse(TextFormat.CONTENT_TYPE_004)) {

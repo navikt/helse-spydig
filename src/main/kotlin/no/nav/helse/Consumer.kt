@@ -20,8 +20,11 @@ class Consumer(
     private val logger = LoggerFactory.getLogger(Consumer::class.java)
     private val validator = JsonSchemaValidator()
 
+
+
     companion object {
-        private val requests = Counter.build()
+        private val appLabels = mutableListOf<String>("spleis", "spedisjon")
+        private val requests = Counter.build().labelNames(*appLabels.toTypedArray())
             .name("spydig_validation_errors").help("Total errors.").register()
     }
 
@@ -35,7 +38,6 @@ class Consumer(
                     records.forEach {
                         handleMessages(it.value())
                     }
-
                 }
             }
         } catch (err: WakeupException) {
@@ -67,7 +69,7 @@ class Consumer(
     private fun handleMessages(value: String) {
         val message = objectMapper.readTree(value)
         if (!validator.isJSONvalid(message)) {
-            requests.inc()
+            requests.labels("spleis").inc()
         }
     }
 
