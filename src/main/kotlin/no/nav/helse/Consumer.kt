@@ -2,7 +2,6 @@ package no.nav.helse
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.prometheus.client.Counter
-import org.apache.kafka.clients.consumer.ConsumerRecords
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.errors.WakeupException
 import org.apache.kafka.common.serialization.StringDeserializer
@@ -13,8 +12,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class Consumer(
     private val config: Config,
-    clientId: String = UUID.randomUUID().toString().slice(1..5),
-    private val run: Consumer.(records: ConsumerRecords<String, String>) -> Unit = {},
+    clientId: String = UUID.randomUUID().toString().slice(1..5)
 ) {
     private val consumer =
         KafkaConsumer(config.consumerConfig(clientId, config.consumerGroup), StringDeserializer(), StringDeserializer())
@@ -35,7 +33,6 @@ class Consumer(
             consumer.subscribe(listOf(config.topic))
 
             while (running.get()) {
-                logger.info("spydig kjører")
                 consumer.poll(Duration.ofSeconds(1)).also { records ->
                     var counter = 0
                     records.forEach {
@@ -43,9 +40,6 @@ class Consumer(
                         handleMessages(it.value())
                     }
                     logger.info("leste $counter meldinger")
-
-                    run(records)
-                    //participant.messages().forEach { publish(it.json()) }
                 }
             }
         } catch (err: WakeupException) {

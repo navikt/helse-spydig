@@ -22,7 +22,7 @@ class Config(
                 appName,
                 System.getenv("KAFKA_BROKERS").split(";"),
                 System.getenv("SUBSUMSJON_TOPIC"),
-                System.getenv("SUBSUMSJON_CONSUMER_GROUP") ?: "consumer-$appName-v1",
+                System.getenv("SUBSUMSJON_CONSUMER_GROUP") ?: "consumer-$appName-v2",
                 System.getenv("KAFKA_TRUSTSTORE_PATH"),
                 System.getenv("KAFKA_KEYSTORE_PATH"),
                 System.getenv("KAFKA_CREDSTORE_PASSWORD")
@@ -35,7 +35,7 @@ class Config(
         put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroup)
         put(ConsumerConfig.CLIENT_ID_CONFIG, "consumer-$appName-$clientId")
         put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
-//        put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, autoCommit.toString())
+        put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false)
 //        put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "1")
         //put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, "$maxPollIntervalMs")
 
