@@ -12,7 +12,12 @@ spec:
       prependText: '<!here> | ' # this text will be prepended to the Slack alert title
   alerts:
     - alert: schema validering feilet
-      expr: 'spydig_validation_errors_total > 0'
+      expr: 'increase(spydig_validation_errors_total[10s]) > 0'
       for: 10s
       description: "validering av schema feilet"
       action: "spis en kanelbolle"
+    - alert: schema validering feilet spleis
+      expr: 'spydig_validation_errors_spleis > 0'
+      for: 10s
+      description: "validering av schema feilet for spleis"
+      action: "spis en kanelbolle SPLEIS"
