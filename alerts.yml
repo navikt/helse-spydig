@@ -20,3 +20,5 @@ spec:
       for: 1s
       description: |
         Endepunkt åpnet, sender melding i "{{ $labels.slack_channel }}".
+      action: |
+        Ingen handling
