@@ -21,11 +21,12 @@ class Consumer(
     private val validator = JsonSchemaValidator()
 
 
-
     companion object {
-        private val appLabels = mutableListOf<String>("spleis", "spedisjon")
-        private val requests = Counter.build().labelNames(*appLabels.toTypedArray())
-            .name("spydig_validation_errors").help("Total errors.").register()
+        private val total_counter = Counter.build()
+            .name("validation_errors_total").help("Total errors.").register()
+        private val spleis = "spleis"
+        private val spleis_counter = Counter.build()
+            .name("validation_errors_$spleis").help("Total errors for spleis app.").register()
     }
 
     internal fun isRunning() = running.get()
@@ -54,6 +55,7 @@ class Consumer(
     fun start() {
         logger.info("starting spydig")
         if (running.getAndSet(true)) return logger.info("spydig already started")
+
         consumeMessages()
     }
 
@@ -69,7 +71,10 @@ class Consumer(
     private fun handleMessages(value: String) {
         val message = objectMapper.readTree(value)
         if (!validator.isJSONvalid(message)) {
-            requests.labels("spleis", "spedisjon").inc()
+            total_counter.inc()
+            // if spleis
+            /// spleis_counter.inc()
+
         }
     }
 

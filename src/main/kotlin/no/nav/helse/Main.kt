@@ -28,11 +28,9 @@ fun main() {
 
 fun ktorServer(appName: String, isReady: () -> Boolean): ApplicationEngine =
     embeddedServer(CIO, applicationEngineEnvironment {
-
         /**
          * Konfigurasjon av Webserver (Ktor https://ktor.io/)
          */
-
 
         val appMicrometerRegistry = defaultRegistry
         log = logger
@@ -53,11 +51,9 @@ fun ktorServer(appName: String, isReady: () -> Boolean): ApplicationEngine =
                     appMicrometerRegistry,
                     SYSTEM
                 )
-
             }
 
             routing {
-
                 get("/") {
                     call.respondText(
                         "<html><h1>$appName</h1><html>",
@@ -75,6 +71,7 @@ fun ktorServer(appName: String, isReady: () -> Boolean): ApplicationEngine =
                         TextFormat.write004(this, appMicrometerRegistry.metricFamilySamples())
                     }
                 }
+
                 get("/isalive") {
                     call.respondText("OK")
                 }
