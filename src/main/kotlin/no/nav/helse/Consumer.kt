@@ -78,7 +78,7 @@ class Consumer(
             val kilde = melding.get("kilde")
             if (kilde == null) {
                 total_counter.labels(slackKanal, "null kilde").inc()
-                logger.info("kilde mangler i melding")
+//                logger.info("kilde mangler i melding")
                 return
             }
             when (kilde.asText()) {
@@ -100,7 +100,7 @@ class Consumer(
                 }
                 else -> {
                     total_counter.labels(slackKanal, "Ukjent kilde").inc()
-                    logger.info("fant feil i schema hvor kilde ikke gjenkjennes")
+                    logger.info("fant feil i schema hvor kilde ikke gjenkjennes. Denne kilden er ${kilde.asText()}")
                 }
             }
         }
