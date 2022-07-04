@@ -8,7 +8,7 @@ metadata:
 spec:
   receivers: # receivers for all alerts below
     slack:
-      channel: '#spydig-test'
+      channel: '{{ $labels.slack_channel }}'
       icon_emoji: ':horse_racing:'
       send_resolved: false
       username: Spydig
@@ -17,7 +17,8 @@ spec:
       expr: 'increase(spydig_test_total[5m]) > 0'
       for: 1s
       description: |
-        Endepunkt åpnet, sender melding i "\{{ $labels.slack_channel }}".
+        Endepunkt åpnet, sender melding i "{{ $labels.slack_channel }}".
       action: |
-        Resultat av expr: "\{{ index ((index .Alerts 0).Labels) "slack_channel" }}"
+        Resultat av expr skal være:
+        "{{ index ((index .Alerts 0).Labels) "slack_channel" }}"
   
