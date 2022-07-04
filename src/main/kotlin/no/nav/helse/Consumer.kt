@@ -23,10 +23,10 @@ class Consumer(
 
     companion object {
         private val total_counter = Counter.build()
-            .name("validation_errors_total").help("Total errors.").register()
+            .name("spydig_validation_errors_total").help("Total errors.").register()
         private val spleis = "spleis"
         private val spleis_counter = Counter.build()
-            .name("validation_errors_$spleis").help("Total errors for spleis app.").register()
+            .name("spydig_validation_errors_$spleis").help("Total errors for spleis app.").register()
     }
 
     internal fun isRunning() = running.get()
