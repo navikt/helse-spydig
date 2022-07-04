@@ -72,7 +72,13 @@ class Consumer(
         val message = objectMapper.readTree(value)
         if (!validator.isJSONvalid(message)) {
             total_counter.inc()
-            when(message["kilde"].toString()){
+
+            val kilde = message.get("kilde")
+            if (kilde == null) {
+                logger.info("kilde mangler i melding")
+                return
+            }
+            when (kilde.toString()) {
                 "spleis" -> {
                     spleis_counter.inc()
                     logger.info("fant feil hos Spleis")
