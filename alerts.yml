@@ -9,7 +9,9 @@ spec:
   receivers: # receivers for all alerts below
     slack:
       channel: '\{{ index ((index .Alerts 0).Labels) "slack_channel" }}'
-      prependText: '<!here> | ' # this text will be prepended to the Slack alert title
+      icon_emoji: ':horse_racing:'
+      send_resolved: false
+      username: Spydig
   alerts:
     - alert: schema validering feilet
       expr: 'increase(spydig_validation_errors_total[1m]) > 0'
