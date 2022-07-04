@@ -72,9 +72,14 @@ class Consumer(
         val message = objectMapper.readTree(value)
         if (!validator.isJSONvalid(message)) {
             total_counter.inc()
-            // if spleis
-            /// spleis_counter.inc()
-
+            when(message["kilde"].toString()){
+                "spleis" -> {
+                    spleis_counter.inc()
+                    logger.info("fant feil hos Spleis")
+                }
+                else ->
+                    logger.info("fant feil i schema uten egen counter")
+            }
         }
     }
 
