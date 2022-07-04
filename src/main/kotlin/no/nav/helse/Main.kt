@@ -15,6 +15,7 @@ import io.micrometer.core.instrument.Clock.*
 import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import io.prometheus.client.CollectorRegistry.defaultRegistry
+import io.prometheus.client.Counter
 import io.prometheus.client.exporter.common.TextFormat
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -33,6 +34,10 @@ fun ktorServer(appName: String, isReady: () -> Boolean): ApplicationEngine =
          */
 
         val appMicrometerRegistry = defaultRegistry
+
+        val total_counter = Counter.build()
+            .name("spydig_test").help("Total errors.").register()
+
         log = logger
         connector {
             port = 8080
@@ -62,6 +67,7 @@ fun ktorServer(appName: String, isReady: () -> Boolean): ApplicationEngine =
                 }
 
                 get("/hello") {
+                    total_counter.inc()
                     call.respondText("Hello")
                 }
 
