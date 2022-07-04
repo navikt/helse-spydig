@@ -25,7 +25,7 @@ spec:
       expr: 'increase(spydig_test_total[5m]) > 0'
       for: 1s
       description: |
-        Validering av json schema feilet "\{{ $labels.ny_label }}".
+        Validering av json schema feilet "\{{ $labels.ny_label_2 }}".
       action: |
-        spis en kanelbolle "\{{ $labels.ny_label }}".
+        spis en kanelbolle "\{{ $labels.ny_label_2 }}".
   
