@@ -15,7 +15,7 @@ class JsonSchemaValidator {
     private fun JsonSchema.validateMessage(json: JsonNode): Boolean {
         val valideringsfeil = validate(json)
         return if (valideringsfeil.isNotEmpty()) {
-            logger.info("Fant en feil:\n $valideringsfeil \n det var ${json["kilde"]} som var synderen ")
+            logger.info("Fant en feil:\n $valideringsfeil \n det var ${json["kilde"].asText()} som var synderen ")
             false
         } else {
             true

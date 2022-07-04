@@ -78,7 +78,7 @@ class Consumer(
                 logger.info("kilde mangler i melding")
                 return
             }
-            when (kilde.toString()) {
+            when (kilde.asText()) {
                 "spleis" -> {
                     spleis_counter.inc()
                     logger.info("fant feil hos Spleis")
