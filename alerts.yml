@@ -8,7 +8,7 @@ metadata:
 spec:
   receivers: # receivers for all alerts below
     slack:
-      channel: '#spydig-test'
+      channel: '\{{ index ((index .Alerts 0).Labels) "slack_channel" }}'
       prependText: '<!here> | ' # this text will be prepended to the Slack alert title
   alerts:
     - alert: schema validering feilet
@@ -25,7 +25,8 @@ spec:
       expr: 'increase(spydig_test_total[5m]) > 0'
       for: 1s
       description: |
-        Validering av json schema feilet "\{{ $labels.ny_label_2 }}".
+        Validering av json schema feilet "\{{ $labels.kilde }}".
+        '\{{ index ((index .Alerts 0).Labels) "slack_channel" }}'
       action: |
         spis en kanelbolle "\{{ $labels.ny_label_2 }}".
   
