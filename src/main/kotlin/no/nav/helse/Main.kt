@@ -67,7 +67,7 @@ fun ktorServer(appName: String, isReady: () -> Boolean): ApplicationEngine =
                 }
 
                 get("/hello") {
-                    total_counter.labels("spydig-test").inc()
+                    total_counter.labels("#spydig-test").inc()
                     call.respondText("Hello")
                 }
 
