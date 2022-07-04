@@ -72,31 +72,36 @@ class Consumer(
         val kildeSyfosmregler = "syfosmregler"
         val kildeSyfosoknad = "syfosoknad"
         val kildeFlexSyketilfelle = "flex-syketilfelle"
+        val kildeSyfosmPapirRegler = "syfosmpapirregler"
 
         val melding = objectMapper.readTree(value)
         if (!validator.isJSONvalid(melding)) {
             val kilde = melding.get("kilde")
             if (kilde == null) {
                 total_counter.labels(slackKanal, "null kilde").inc()
-//                logger.info("kilde mangler i melding")
+                logger.info("kilde mangler i melding")
                 return
             }
             when (kilde.asText()) {
                 kildeSpleis -> {
                     total_counter.labels(slackKanal, kildeSpleis).inc()
-//                    logger.info("fant feil hos $kildeSpleis, sender melding")
+                    logger.info("fant feil hos $kildeSpleis, sender melding")
                 }
                 kildeSyfosmregler -> {
                     total_counter.labels(slackKanal, kildeSyfosmregler).inc()
-//                    logger.info("fant feil hos $kildeSyfosmregler, sender melding")
+                    logger.info("fant feil hos $kildeSyfosmregler, sender melding")
                 }
                 kildeSyfosoknad -> {
                     total_counter.labels(slackKanal, kildeSyfosoknad).inc()
-//                    logger.info("fant feil hos $kildeSyfosøknad, sender melding")
+                    logger.info("fant feil hos $kildeSyfosoknad, sender melding")
                 }
                 kildeFlexSyketilfelle -> {
                     total_counter.labels(slackKanal, kildeFlexSyketilfelle).inc()
-//                    logger.info("fant feil hos $kildeFlexSyketilfelle, sender melding")
+                    logger.info("fant feil hos $kildeFlexSyketilfelle, sender melding")
+                }
+                kildeSyfosmPapirRegler -> {
+                    total_counter.labels(slackKanal, kildeSyfosmPapirRegler).inc()
+                    logger.info("fant feil hos $kildeSyfosmPapirRegler, sender melding")
                 }
                 else -> {
                     total_counter.labels(slackKanal, "Ukjent kilde").inc()
