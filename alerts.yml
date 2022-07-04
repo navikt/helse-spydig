@@ -22,7 +22,10 @@ spec:
       description: "validering av schema feilet for spleis"
       action: "spis en kanelbolle SPLEIS"
     - alert: test
-      expr: 'increase(spydig_test_total[1m]) > 0'
+      expr: 'increase(spydig_test_total[5m]) > 0'
       for: 1s
-      description: "kontakt av endepunkt"
-      action: "spis en sjokoladebolle"
+      description: |
+        Validering av json schema feilet "\{{ $labels.ny_label }}".
+      action: |
+        spis en kanelbolle "\{{ $labels.ny_label }}".
+  

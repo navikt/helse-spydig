@@ -22,7 +22,7 @@ class Consumer(
 
 
     companion object {
-        private val total_counter = Counter.build()
+        private val total_counter = Counter.build().labelNames("ny_label")
             .name("spydig_validation_errors_total").help("Total errors.").register()
         private val spleis = "spleis"
         private val spleis_counter = Counter.build()
@@ -71,7 +71,7 @@ class Consumer(
     private fun handleMessages(value: String) {
         val message = objectMapper.readTree(value)
         if (!validator.isJSONvalid(message)) {
-            total_counter.inc()
+            total_counter.labels("ny_label").inc()
 
             val kilde = message.get("kilde")
             if (kilde == null) {
