@@ -35,7 +35,7 @@ fun ktorServer(appName: String, isReady: () -> Boolean): ApplicationEngine =
 
         val appMicrometerRegistry = defaultRegistry
 
-        val total_counter = Counter.build().labelNames("slack_channel")
+        val totalCounter = Counter.build().labelNames("slack_channel")
             .name("spydig_test").help("Total errors.").register()
 
         log = logger
@@ -67,17 +67,11 @@ fun ktorServer(appName: String, isReady: () -> Boolean): ApplicationEngine =
                 }
 
                 get("/hello") {
-                    total_counter.labels("#spydig-test").inc()
-                    call.respondText("Hello")
-                }
-
-                get("/hello2") {
-                    total_counter.labels("#paragrafrytterne").inc()
+                    totalCounter.labels("#spydig-test").inc()
                     call.respondText("Hello")
                 }
 
                 get("/metrics") {
-
                     call.respondTextWriter(ContentType.parse(TextFormat.CONTENT_TYPE_004)) {
                         TextFormat.write004(this, appMicrometerRegistry.metricFamilySamples())
                     }

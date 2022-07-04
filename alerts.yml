@@ -16,9 +16,9 @@ spec:
       username: Spydig
   alerts:
     - alert: test
-      expr: 'increase(spydig_test_total[5m]) > 0'
+      expr: 'increase(spydig_validation_errors_total[5m]) > 0'
       for: 1s
       description: |
-        Endepunkt åpnet, sender melding i "{{ $labels.slack_channel }}".
-      action: |
-        Ingen handling
+        Validering av json schema oppdaget feil.
+        Kilde: "{{ $labels.failing_app }}".
+      action: ""

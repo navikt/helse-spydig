@@ -22,11 +22,8 @@ class Consumer(
 
 
     companion object {
-        private val total_counter = Counter.build().labelNames("ny_label")
+        private val total_counter = Counter.build().labelNames("slack_channel", "failing_app")
             .name("spydig_validation_errors_total").help("Total errors.").register()
-        private val spleis = "spleis"
-        private val spleis_counter = Counter.build()
-            .name("spydig_validation_errors_$spleis").help("Total errors for spleis app.").register()
     }
 
     internal fun isRunning() = running.get()
@@ -67,24 +64,44 @@ class Consumer(
 
     private val objectMapper = jacksonObjectMapper()
 
-
     private fun handleMessages(value: String) {
-        val message = objectMapper.readTree(value)
-        if (!validator.isJSONvalid(message)) {
-            total_counter.labels("ny_label").inc()
+        val slackKanal = "#spydig-test"
+        // TODO: Endre denne til å mappe til rett slack gruppe for prod
 
-            val kilde = message.get("kilde")
+        val kildeSpleis = "spleis"
+        val kildeSyfosmregler = "syfosmregler"
+        val kildeSyfosoknad = "syfosoknad"
+        val kildeFlexSyketilfelle = "flex-syketilfelle"
+
+        val melding = objectMapper.readTree(value)
+        if (!validator.isJSONvalid(melding)) {
+            val kilde = melding.get("kilde")
             if (kilde == null) {
+                total_counter.labels(slackKanal, "null kilde").inc()
                 logger.info("kilde mangler i melding")
                 return
             }
             when (kilde.asText()) {
-                "spleis" -> {
-                    spleis_counter.inc()
-                    logger.info("fant feil hos Spleis")
+                kildeSpleis -> {
+                    total_counter.labels(slackKanal, kildeSpleis).inc()
+//                    logger.info("fant feil hos $kildeSpleis, sender melding")
                 }
-                else ->
-                    logger.info("fant feil i schema uten egen counter")
+                kildeSyfosmregler -> {
+                    total_counter.labels(slackKanal, kildeSyfosmregler).inc()
+//                    logger.info("fant feil hos $kildeSyfosmregler, sender melding")
+                }
+                kildeSyfosoknad -> {
+                    total_counter.labels(slackKanal, kildeSyfosoknad).inc()
+//                    logger.info("fant feil hos $kildeSyfosøknad, sender melding")
+                }
+                kildeFlexSyketilfelle -> {
+                    total_counter.labels(slackKanal, kildeFlexSyketilfelle).inc()
+//                    logger.info("fant feil hos $kildeFlexSyketilfelle, sender melding")
+                }
+                else -> {
+                    total_counter.labels(slackKanal, "Ukjent kilde").inc()
+                    logger.info("fant feil i schema hvor kilde ikke gjenkjennes")
+                }
             }
         }
     }
