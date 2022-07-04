@@ -71,6 +71,11 @@ fun ktorServer(appName: String, isReady: () -> Boolean): ApplicationEngine =
                     call.respondText("Hello")
                 }
 
+                get("/hello2") {
+                    total_counter.labels("#paragrafrytterne").inc()
+                    call.respondText("Hello")
+                }
+
                 get("/metrics") {
 
                     call.respondTextWriter(ContentType.parse(TextFormat.CONTENT_TYPE_004)) {

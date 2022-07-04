@@ -6,9 +6,11 @@ metadata:
   labels:
     team: tbd
 spec:
+  route:
+    group_by: [ slack_channel ]
   receivers: # receivers for all alerts below
     slack:
-      channel: '{{ $labels.slack_channel }}'
+      channel: '{{ index ((index .Alerts 0).Labels) "slack_channel" }}'
       icon_emoji: ':horse_racing:'
       send_resolved: false
       username: Spydig
@@ -18,7 +20,3 @@ spec:
       for: 1s
       description: |
         Endepunkt åpnet, sender melding i "{{ $labels.slack_channel }}".
-      action: |
-        Resultat av expr skal være:
-        "{{ index ((index .Alerts 0).Labels) "slack_channel" }}"
-  
