@@ -4,10 +4,10 @@ on:
     branches:
       - main
     paths:
-      - 'alerts.yml'
-      - '.github/workflows/alerts.yml'
+      - 'nais/alerts.yml'
+      - '.github/workflows/alert-deploy.yml'
 jobs:
-  apply-alerts:
+  dev:
     name: Apply alerts to cluster
     runs-on: ubuntu-latest
     steps:
@@ -18,4 +18,16 @@ jobs:
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
-          RESOURCE: alerts.yml
+          RESOURCE: nais/alerts.yml
+  prod:
+    name: Apply alerts to cluster
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: deploy to prod
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-gcp
+          RESOURCE: nais/alerts.yml

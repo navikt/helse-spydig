@@ -20,7 +20,9 @@ spec:
     max: 1
     min: 1
   ingresses:
-      - https://spydig.dev.intern.nav.no
+  {{#each ingresses as |url|}}
+    - {{url}}
+  {{/each}}
   kafka:
     pool: nav-dev
   prometheus:
