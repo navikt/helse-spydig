@@ -70,7 +70,7 @@ jobs:
           VARS: nais/dev.yml
   deployProd:
     name: Deploy to prod
-    needs: [ set_version, build ]
+    needs: [ set_version, build, deployDev ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
