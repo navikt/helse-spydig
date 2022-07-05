@@ -1,7 +1,7 @@
 apiVersion: "nais.io/v1"
 kind: "Alert"
 metadata:
-  name: helse-spydig
+  name: spydig-alert
   namespace: tbd
   labels:
     team: tbd
@@ -11,7 +11,7 @@ spec:
   receivers: # receivers for all alerts below
     slack:
       channel: '{{ index ((index .Alerts 0).Labels) "slack_channel" }}'
-      icon_emoji: ':horse_racing:'
+      icon_emoji: ':paragrafrytterne:'
       send_resolved: false
       username: Spydig
   alerts:
@@ -19,8 +19,10 @@ spec:
       expr: 'increase(spydig_validation_errors_total[5m]) > 0'
       for: 1s
       description: |
-        Fant problemer med validering av schema
-        Fra applikasjon: "{{ $labels.failing_app }}".
+        Hei, vi fant problemer vedrørende en subsumsjonsmelding
+        fra applikasjonen: {{ $labels.failing_app }}.
       action: |
-        Fiks subsumsjonsmeldinger til å matche schema:
-        https://raw.githubusercontent.com/navikt/helse/main/subsumsjon/json-schema-1.0.0.json
+        1. gå til https://logs.adeo.no/goto/717ba320-fc64-11ec-a503-d3f90a22c586 for å se hva som er feil
+        2. gå til tjenestekalloggen for å se hele meldingen 
+        3. oppdater appen slik at subsumsjonsmeldingene matcher schema som du finner her:
+        https://github.com/navikt/helse/tree/main/subsumsjon
