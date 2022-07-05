@@ -65,7 +65,7 @@ class Consumer(
     private fun handleMessages(value: String) {
         val melding = objectMapper.readTree(value)
         validator.errors(melding)?.let {
-            val kilde = melding.get("kilde").asText("null")
+            val kilde = melding.get("kilde")?.asText() ?: "null"
             val id = melding.get("id")
             logger.warn("fant feil i melding id: {}, kilde: {}, feil: {}", id, kilde, it)
             sikkerlogger.warn("fant feil: {}, melding: {}", it, value)
