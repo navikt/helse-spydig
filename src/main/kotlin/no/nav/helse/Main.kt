@@ -27,7 +27,7 @@ fun main() {
     ConsumerRunner(config, ::ktorServer).startBlocking()
 }
 
-fun ktorServer(appName: String, isReady: () -> Boolean): ApplicationEngine =
+fun ktorServer(appName: String): ApplicationEngine =
     embeddedServer(CIO, applicationEngineEnvironment {
         /**
          * Konfigurasjon av Webserver (Ktor https://ktor.io/)

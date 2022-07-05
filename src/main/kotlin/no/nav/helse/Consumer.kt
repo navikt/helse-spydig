@@ -26,16 +26,13 @@ class Consumer(
             .name("spydig_validation_errors_total").help("Total errors.").register()
     }
 
-    internal fun isRunning() = running.get()
     private fun consumeMessages() {
         var lastException: Exception? = null
         try {
             consumer.subscribe(listOf(config.topic))
             while (running.get()) {
-                consumer.poll(Duration.ofSeconds(1)).also { records ->
-                    records.forEach {
-                        handleMessages(it.value())
-                    }
+                consumer.poll(Duration.ofSeconds(1)).onEach {
+                    handleMessages(it.value())
                 }
             }
         } catch (err: WakeupException) {
@@ -54,12 +51,6 @@ class Consumer(
         if (running.getAndSet(true)) return logger.info("spydig already started")
 
         consumeMessages()
-    }
-
-    fun stop() {
-        logger.info("stopping spydig")
-        if (!running.getAndSet(false)) return logger.info("spydig already stopped")
-        consumer.wakeup()
     }
 
     private val objectMapper = jacksonObjectMapper()

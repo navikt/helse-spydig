@@ -8,12 +8,12 @@ import org.slf4j.LoggerFactory
 
 class ConsumerRunner(
     config: Config,
-    builder: (String, () -> Boolean) -> ApplicationEngine,
+    builder: (String) -> ApplicationEngine,
 ) {
 
     private val logger = LoggerFactory.getLogger(config.appName)
     private val consumer = Consumer(config, config.topic)
-    private val ktor = builder(config.appName, consumer::isRunning)
+    private val ktor = builder(config.appName)
 
     fun startBlocking() {
         runBlocking { start() }

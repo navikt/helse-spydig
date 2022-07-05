@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val kafkaVersion = "3.1.0"
 val ktorVersion = "2.0.2"
