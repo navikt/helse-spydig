@@ -21,7 +21,7 @@ spec:
     max: 1
     min: 1
   ingresses:
-      - https://helse-spydig.dev.intern.nav.no
+      - https://spydig.dev.intern.nav.no
   kafka:
     pool: nav-dev
   prometheus:
