@@ -21,6 +21,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 var logger: Logger = LoggerFactory.getLogger("Application")
+var sikkerlogger: Logger = LoggerFactory.getLogger("tjenestekall")
 
 fun main() {
     val config = Config.fromEnv()

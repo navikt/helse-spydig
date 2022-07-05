@@ -20,7 +20,6 @@ class Consumer(
     private val logger = LoggerFactory.getLogger(Consumer::class.java)
     private val validator = JsonSchemaValidator()
 
-
     companion object {
         private val total_counter = Counter.build().labelNames("slack_channel", "failing_app")
             .name("spydig_validation_errors_total").help("Total errors.").register()
@@ -55,47 +54,30 @@ class Consumer(
 
     private val objectMapper = jacksonObjectMapper()
 
-    private fun handleMessages(value: String) {
-        val kildeSpleis = "spleis"
-        val kildeSyfosmregler = "syfosmregler"
-        val kildeSyfosoknad = "syfosoknad"
-        val kildeFlexSyketilfelle = "flex-syketilfelle"
-        val kildeSyfosmPapirRegler = "syfosmpapirregler"
+    private val teamTilKanaler = mapOf(
+        "spleis" to "#team-bømlo-værsågod",
+        "syfosmregler" to "#team-sykmelding",
+        "syfosoknad" to "#flex",
+        "flex-syketilfelle" to "#flex",
+        "syfosmpapirregler" to "#team-sykmelding",
+    )
 
+    private fun handleMessages(value: String) {
         val melding = objectMapper.readTree(value)
-        if (!validator.isJSONvalid(melding)) {
-            val kilde = melding.get("kilde")
-            if (kilde == null) {
-                total_counter.labels("#område-helse-etterlevelse", "null").inc()
+        validator.errors(melding)?.let {
+            val kilde = melding.get("kilde").asText("null")
+            val id = melding.get("id")
+            logger.warn("fant feil i melding id: {}, kilde: {}, feil: {}", id, kilde, it)
+            sikkerlogger.warn("fant feil: {}, melding: {}", it, value)
+
+            if (kilde == "null") {
+                total_counter.labels("#område-helse-etterlevelse", kilde).inc()
                 logger.info("kilde mangler i melding")
                 return
             }
-            when (kilde.asText()) {
-                kildeSpleis -> {
-                    total_counter.labels("#team-bømlo-værsågod", kildeSpleis).inc()
-                    logger.info("fant feil hos $kildeSpleis, sender melding")
-                }
-                kildeSyfosmregler -> {
-                    total_counter.labels("#team-sykmelding", kildeSyfosmregler).inc()
-                    logger.info("fant feil hos $kildeSyfosmregler, sender melding")
-                }
-                kildeSyfosoknad -> {
-                    total_counter.labels("#flex", kildeSyfosoknad).inc()
-                    logger.info("fant feil hos $kildeSyfosoknad, sender melding")
-                }
-                kildeFlexSyketilfelle -> {
-                    total_counter.labels("#flex", kildeFlexSyketilfelle).inc()
-                    logger.info("fant feil hos $kildeFlexSyketilfelle, sender melding")
-                }
-                kildeSyfosmPapirRegler -> {
-                    total_counter.labels("#team-sykmelding", kildeSyfosmPapirRegler).inc()
-                    logger.info("fant feil hos $kildeSyfosmPapirRegler, sender melding")
-                }
-                else -> {
-                    total_counter.labels("#område-helse-etterlevelse", kilde.asText()).inc()
-                    logger.info("fant feil i schema hvor kilde ikke gjenkjennes. Denne kilden er ${kilde.asText()}")
-                }
-            }
+
+            val kanal = teamTilKanaler.getOrDefault(kilde, "#område-helse-etterlevelse")
+            total_counter.labels(kanal, kilde).inc()
         }
     }
 
@@ -116,5 +98,4 @@ class Consumer(
             logger.error(err.message, err)
         }
     }
-
 }
