@@ -20,7 +20,7 @@ import io.prometheus.client.exporter.common.TextFormat
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-var logger: Logger = LoggerFactory.getLogger("Application")
+var logger: Logger = LoggerFactory.getLogger("Spydig")
 var sikkerlogger: Logger = LoggerFactory.getLogger("tjenestekall")
 
 fun main() {

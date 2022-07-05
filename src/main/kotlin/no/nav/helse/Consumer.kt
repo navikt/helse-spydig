@@ -17,7 +17,6 @@ class Consumer(
     private val consumer =
         KafkaConsumer(config.consumerConfig(clientId, config.consumerGroup), StringDeserializer(), StringDeserializer())
     private val running = AtomicBoolean(false)
-    private val logger = LoggerFactory.getLogger(Consumer::class.java)
     private val validator = JsonSchemaValidator()
 
     companion object {
@@ -72,7 +71,6 @@ class Consumer(
 
             if (kilde == "null") {
                 total_counter.labels("#område-helse-etterlevelse", kilde).inc()
-                logger.info("kilde mangler i melding")
                 return
             }
 
@@ -83,7 +81,7 @@ class Consumer(
 
     private fun closeResources(lastException: Exception?) {
         if (running.getAndSet(false)) {
-            logger.warn("stopped consuming messages due to an error", lastException)
+            logger.warn("stopped consuming messages due to an error: ", lastException)
         } else {
             logger.info("stopped consuming messages after receiving stop signal")
         }

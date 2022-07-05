@@ -11,7 +11,6 @@ class ConsumerRunner(
     builder: (String) -> ApplicationEngine,
 ) {
 
-    private val logger = LoggerFactory.getLogger(config.appName)
     private val consumer = Consumer(config, config.topic)
     private val ktor = builder(config.appName)
 
