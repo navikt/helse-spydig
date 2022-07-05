@@ -15,10 +15,12 @@ spec:
       send_resolved: false
       username: Spydig
   alerts:
-    - alert: test
+    - alert: Feil ved validering av subsumsjonsmeldinger
       expr: 'increase(spydig_validation_errors_total[5m]) > 0'
       for: 1s
       description: |
-        Validering av json schema oppdaget feil.
-        Kilde: "{{ $labels.failing_app }}".
-      action: ""
+        Fant problemer med validering av schema
+        Fra applikasjon: "{{ $labels.failing_app }}".
+      action: |
+        Fiks subsumsjonsmeldinger til å matche schema:
+        https://raw.githubusercontent.com/navikt/helse/main/subsumsjon/json-schema-1.0.0.json
