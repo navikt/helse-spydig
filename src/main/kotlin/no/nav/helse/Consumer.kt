@@ -63,6 +63,11 @@ class Consumer(
 
     private fun handleMessages(value: String) {
         val melding = objectMapper.readTree(value)
+        if(melding["eventName"].isNull || melding["eventName"].asText() != "subsumsjon") {
+            logger.info("melding id: {}, eventName: {} blir ikke validert", melding["id"], melding["eventName"])
+            return
+        }
+
         validator.errors(melding)?.let {
             val kilde = melding.get("kilde")?.asText() ?: "null"
             val id = melding.get("id")
