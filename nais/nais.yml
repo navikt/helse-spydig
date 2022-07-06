@@ -24,7 +24,7 @@ spec:
     - {{url}}
   {{/each}}
   kafka:
-    pool: nav-dev
+    pool: {{kafka-pool}}
   prometheus:
     enabled: true
     path: /metrics
