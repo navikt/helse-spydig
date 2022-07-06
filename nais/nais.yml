@@ -11,10 +11,8 @@ spec:
   strategy:
     type: Recreate
   liveness:
-    initialDelay: 30
     path: isalive
   readiness:
-    initialDelay: 30
     path: isready
   replicas:
     max: 1
