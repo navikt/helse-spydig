@@ -9,6 +9,8 @@ import java.time.Duration
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 
+private const val DEFAULT_CHANNEL = "#team-bømlo-ops"
+
 class Consumer(
     private val config: Config,
     clientId: String = UUID.randomUUID().toString().slice(1..5)
@@ -58,6 +60,7 @@ class Consumer(
         "syfosoknad" to "#flex",
         "flex-syketilfelle" to "#flex",
         "syfosmpapirregler" to "#team-sykmelding",
+        "riskvurderer-sykdom" to "#helse-risk-alerts",
     )
 
     private fun handleMessages(value: String) {
@@ -74,11 +77,11 @@ class Consumer(
             sikkerlogger.warn("fant feil: {}, melding: {}", it, value)
 
             if (kilde == "null") {
-                total_counter.labels("#område-helse-etterlevelse", kilde).inc()
+                total_counter.labels(DEFAULT_CHANNEL, kilde).inc()
                 return
             }
 
-            val kanal = teamTilKanaler.getOrDefault(kilde, "#område-helse-etterlevelse")
+            val kanal = teamTilKanaler.getOrDefault(kilde, DEFAULT_CHANNEL)
             total_counter.labels(kanal, kilde).inc()
         }
     }
