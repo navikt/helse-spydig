@@ -8,6 +8,7 @@ metadata:
 spec:
   route:
     group_by: [ slack_channel ]
+    repeatInterval: 1d
   receivers: # receivers for all alerts below
     slack:
       channel: '{{ index ((index .Alerts 0).Labels) "slack_channel" }}'
@@ -17,7 +18,7 @@ spec:
   alerts:
     - alert: Feil ved validering av subsumsjonsmeldinger
       expr: 'increase(spydig_validation_errors_total[5m]) > 0'
-      for: 1s
+      for: 10s
       description: |
         Hei, vi fant problemer vedrørende en subsumsjonsmelding
         fra applikasjonen: {{ $labels.failing_app }}.
