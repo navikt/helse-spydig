@@ -9,6 +9,7 @@ spec:
   route:
     group_by: [ slack_channel ]
     repeatInterval: 24h
+    groupInterval: 24h
   receivers: # receivers for all alerts below
     slack:
       channel: '{{ index ((index .Alerts 0).Labels) "slack_channel" }}'
