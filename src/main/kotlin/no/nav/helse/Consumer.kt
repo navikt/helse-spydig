@@ -9,7 +9,7 @@ import java.time.Duration
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 
-private const val DEFAULT_CHANNEL = "#team-bømlo-ops"
+private const val DEFAULT_CHANNEL = "#team-bømlo-alerts"
 
 class Consumer(
     private val config: Config,
