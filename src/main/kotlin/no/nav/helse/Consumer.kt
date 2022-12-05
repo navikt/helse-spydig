@@ -55,7 +55,7 @@ class Consumer(
     private val objectMapper = jacksonObjectMapper()
 
     private val teamTilKanaler = mapOf(
-        "spleis" to "#team-bømlo-ops",
+        "spleis" to "#team-bømlo-alerts",
         "syfosmregler" to "#team-sykmelding",
         "syfosoknad" to "#flex",
         "flex-syketilfelle" to "#flex",
