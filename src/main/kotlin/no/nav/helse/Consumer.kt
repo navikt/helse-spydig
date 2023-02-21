@@ -71,8 +71,14 @@ class Consumer(
             logger.info("melding id: {}, eventName: {} blir ikke validert", melding["id"], melding["eventName"])
             return
         }
+        val fodselsnummer = melding.get("fodselsnummer")?.asText() ?: "null"
+        if (fodselsnummer == "23127925208")  {
+            val kilde = melding.get("kilde")?.asText() ?: "null"
+            val kanal = teamTilKanaler.getOrDefault(kilde, DEFAULT_CHANNEL)
+            total_counter.labels(kanal, kilde).inc()
+        }
 
-        validator.errors(melding)?.let {
+      /*  validator.errors(melding)?.let {
             val kilde = melding.get("kilde")?.asText() ?: "null"
             val id = melding.get("id")
             logger.warn("fant feil i melding id: {}, kilde: {}, feil: {}", id, kilde, it)
@@ -85,7 +91,7 @@ class Consumer(
 
             val kanal = teamTilKanaler.getOrDefault(kilde, DEFAULT_CHANNEL)
             total_counter.labels(kanal, kilde).inc()
-        }
+        }*/
     }
 
     private fun closeResources(lastException: Exception?) {
