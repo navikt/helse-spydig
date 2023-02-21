@@ -1,4 +1,29 @@
-ingresses:
-  - https://spydig.intern.nav.no
-kafka-pool:
-  - nav-prod
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  name: spydig
+  namespace: tbd
+  labels:
+    team: tbd
+spec:
+  image: {{image}}
+  port: 8080
+  ingresses:
+    - https://spydig.intern.nav.no
+  liveness:
+    path: isalive
+  readiness:
+    path: isready
+  replicas:
+    max: 1
+    min: 1
+  kafka:
+    pool: nav-prod
+    prometheus:
+      enabled: true
+      path: /metrics
+    secureLogs:
+      enabled: true
+    env:
+      - name: SUBSUMSJON_TOPIC
+        value: "flex.omrade-helse-etterlevelse"

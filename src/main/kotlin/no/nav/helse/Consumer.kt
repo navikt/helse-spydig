@@ -54,12 +54,14 @@ class Consumer(
 
     private val objectMapper = jacksonObjectMapper()
 
+    private val teamSykmelding = if (Toggle.DevKanaler.enabled) "#sykmelding-alerts-dev" else "#sykmelding-alerts"
+
     private val teamTilKanaler = mapOf(
         "spleis" to "#team-bømlo-alerts",
-        "syfosmregler" to "#team-sykmelding",
+        "syfosmregler" to teamSykmelding,
         "syfosoknad" to "#flex",
         "flex-syketilfelle" to "#flex",
-        "syfosmpapirregler" to "#team-sykmelding",
+        "syfosmpapirregler" to teamSykmelding,
         "riskvurderer-sykdom" to "#helse-risk-alerts",
     )
 
