@@ -10,7 +10,6 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 
 private const val DEFAULT_CHANNEL = "#team-bømlo-alerts"
-private const val DEFAULT_CHANNEL_DEV = "#spydig"
 
 class Consumer(
     private val config: Config,
@@ -23,8 +22,6 @@ class Consumer(
 
     companion object {
         private val total_counter = Counter.build().labelNames("slack_channel", "failing_app")
-            .name("spydig_validation_errors_total").help("Total errors.").register()
-        private val total_counter_dev = Counter.build().labelNames("slack_channel_dev", "failing_app")
             .name("spydig_validation_errors_total").help("Total errors.").register()
     }
 
@@ -66,13 +63,13 @@ class Consumer(
         "riskvurderer-sykdom" to "#helse-risk-alerts",
     )
 
-    private val teamTilKanaler_dev = mapOf(
-        "spleis" to "#spydig",
-        "syfosmregler" to "#spydig",
-        "syfosoknad" to "#spydig",
-        "flex-syketilfelle" to "#spydig",
-        "syfosmpapirregler" to "#spydig",
-        "riskvurderer-sykdom" to "#spydig",
+    private val teamTilKanalerDev = mapOf(
+        "spleis" to "#team-bømlo-alerts",
+        "syfosmregler" to "#team-sykmelding",
+        "syfosoknad" to "#flex",
+        "flex-syketilfelle" to "#flex",
+        "syfosmpapirregler" to "#team-sykmelding",
+        "riskvurderer-sykdom" to "#helse-risk-alerts",
     )
 
     private fun handleMessages(value: String) {
@@ -82,6 +79,12 @@ class Consumer(
             logger.info("melding id: {}, eventName: {} blir ikke validert", melding["id"], melding["eventName"])
             return
         }
+
+      /*  when (System.getenv()["NAIS_CLUSTER_NAME"]) {
+            "dev-gcp" -> {
+                total_counter.labels("#spydig-dev", "null").inc()
+            } else -> total_counter.labels("#spydig", "null").inc()
+        }*/
 
         validator.errors(melding)?.let {
             val kilde = melding.get("kilde")?.asText() ?: "null"
