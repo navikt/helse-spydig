@@ -79,6 +79,14 @@ class Consumer(
             logger.info("melding id: {}, eventName: {} blir ikke validert", melding["id"], melding["eventName"])
             return
         }
+        when (System.getenv()["NAIS_CLUSTER_NAME"]) {
+            "dev-gcp" -> {
+                if (melding["fodselsnummer"].asText() == "05907599711") {
+                    total_counter.labels("#spydig-dev", "null").inc()
+                }
+            } else -> sikkerlogger.info("feil")
+        }
+
 
       /*  when (System.getenv()["NAIS_CLUSTER_NAME"]) {
             "dev-gcp" -> {
