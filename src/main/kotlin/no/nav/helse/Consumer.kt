@@ -54,45 +54,24 @@ class Consumer(
 
     private val objectMapper = jacksonObjectMapper()
 
-    private val teamTilKanaler = mapOf(
-        "spleis" to "#team-bømlo-alerts",
-        "syfosmregler" to "#team-sykmelding",
-        "syfosoknad" to "#flex",
-        "flex-syketilfelle" to "#flex",
-        "syfosmpapirregler" to "#team-sykmelding",
-        "riskvurderer-sykdom" to "#helse-risk-alerts",
-    )
-
-    private val teamTilKanalerDev = mapOf(
-        "spleis" to "#team-bømlo-alerts",
-        "syfosmregler" to "#team-sykmelding",
-        "syfosoknad" to "#flex",
-        "flex-syketilfelle" to "#flex",
-        "syfosmpapirregler" to "#team-sykmelding",
-        "riskvurderer-sykdom" to "#helse-risk-alerts",
-    )
+    // team sykmelding er eneste som skiller på alerts fra spydig i dev og prod
+    private fun teamTilKanaler(sykmelding: String) : Map<String, String> {
+        return mapOf(
+            "spleis" to "#team-bømlo-alerts",
+            "syfosmregler" to sykmelding,
+            "syfosoknad" to "#flex",
+            "flex-syketilfelle" to "#flex",
+            "syfosmpapirregler" to sykmelding,
+            "riskvurderer-sykdom" to "#helse-risk-alerts",
+        )
+    }
 
     private fun handleMessages(value: String) {
         val melding = objectMapper.readTree(value)
-        sikkerlogger.info("leser melding {}", melding)
         if(melding["eventName"].isNull || melding["eventName"].asText() != "subsumsjon") {
             logger.info("melding id: {}, eventName: {} blir ikke validert", melding["id"], melding["eventName"])
             return
         }
-        when (System.getenv()["NAIS_CLUSTER_NAME"]) {
-            "dev-gcp" -> {
-                if (melding["fodselsnummer"].asText() == "05907599711") {
-                    total_counter.labels("#spydig-dev", "null").inc()
-                }
-            } else -> sikkerlogger.info("feil")
-        }
-
-
-      /*  when (System.getenv()["NAIS_CLUSTER_NAME"]) {
-            "dev-gcp" -> {
-                total_counter.labels("#spydig-dev", "null").inc()
-            } else -> total_counter.labels("#spydig", "null").inc()
-        }*/
 
         validator.errors(melding)?.let {
             val kilde = melding.get("kilde")?.asText() ?: "null"
@@ -104,9 +83,15 @@ class Consumer(
                 total_counter.labels(DEFAULT_CHANNEL, kilde).inc()
                 return
             }
-
-            val kanal = teamTilKanaler.getOrDefault(kilde, DEFAULT_CHANNEL)
-            total_counter.labels(kanal, kilde).inc()
+            when (System.getenv()["NAIS_CLUSTER_NAME"]) {
+                "dev-gcp" -> {
+                    val kanal = teamTilKanaler("#sykmelding-alerts-dev").getOrDefault(kilde, DEFAULT_CHANNEL)
+                    total_counter.labels(kanal, kilde).inc()
+                } else -> {
+                    val kanal = teamTilKanaler("#sykmelding-alerts").getOrDefault(kilde, DEFAULT_CHANNEL)
+                    total_counter.labels(kanal, kilde).inc()
+                }
+            }
         }
     }
 
