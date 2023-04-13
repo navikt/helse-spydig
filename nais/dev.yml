@@ -1,4 +1,2 @@
-ingresses:
-  - https://spydig.intern.dev.nav.no
 kafka-pool:
   - nav-dev

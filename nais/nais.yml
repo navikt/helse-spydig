@@ -17,10 +17,10 @@ spec:
   replicas:
     max: 1
     min: 1
-  ingresses:
-  {{#each ingresses as |url|}}
-    - {{url}}
-  {{/each}}
+  accessPolicy:
+    outbound:
+      external:
+        - host: raw.githubusercontent.com
   kafka:
     pool: {{kafka-pool}}
   prometheus:
