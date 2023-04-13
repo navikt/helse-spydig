@@ -1,17 +1,18 @@
 package no.nav.helse
 
-import io.ktor.server.engine.ApplicationEngine
+import io.ktor.server.engine.*
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.slf4j.LoggerFactory
 
 class ConsumerRunner(
     config: Config,
-    builder: () -> ApplicationEngine,
+    builder: (String) -> ApplicationEngine,
 ) {
 
     private val consumer = Consumer(config, config.topic)
-    private val ktor = builder()
+    private val ktor = builder(config.appName)
 
     fun startBlocking() {
         runBlocking { start() }
