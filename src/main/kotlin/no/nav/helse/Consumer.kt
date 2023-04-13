@@ -2,6 +2,7 @@ package no.nav.helse
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.prometheus.client.Counter
+import net.logstash.logback.argument.StructuredArguments.kv
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.errors.WakeupException
 import org.apache.kafka.common.serialization.StringDeserializer
@@ -68,6 +69,7 @@ class Consumer(
 
     private fun handleMessages(value: String) {
         val melding = objectMapper.readTree(value)
+        sikkerlogger.info("Leser melding med {}", kv("json", melding.toPrettyString()))
         if(melding["eventName"].isNull || melding["eventName"].asText() != "subsumsjon") {
             logger.info("melding id: {}, eventName: {} blir ikke validert", melding["id"], melding["eventName"])
             return
