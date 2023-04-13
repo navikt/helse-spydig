@@ -1,21 +1,24 @@
 package no.nav.helse
 
-import io.ktor.http.*
-import io.ktor.serialization.jackson.*
-import io.ktor.server.application.*
-import io.ktor.server.cio.*
-import io.ktor.server.engine.*
-import io.ktor.server.metrics.micrometer.*
-import io.ktor.server.plugins.callloging.*
-import io.ktor.server.plugins.contentnegotiation.*
-import io.ktor.server.request.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
-import io.micrometer.core.instrument.Clock.*
+import io.ktor.http.ContentType
+import io.ktor.serialization.jackson.jackson
+import io.ktor.server.application.call
+import io.ktor.server.application.install
+import io.ktor.server.cio.CIO
+import io.ktor.server.engine.ApplicationEngine
+import io.ktor.server.engine.applicationEngineEnvironment
+import io.ktor.server.engine.connector
+import io.ktor.server.engine.embeddedServer
+import io.ktor.server.metrics.micrometer.MicrometerMetrics
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.response.respondText
+import io.ktor.server.response.respondTextWriter
+import io.ktor.server.routing.get
+import io.ktor.server.routing.routing
+import io.micrometer.core.instrument.Clock.SYSTEM
 import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import io.prometheus.client.CollectorRegistry.defaultRegistry
-import io.prometheus.client.Counter
 import io.prometheus.client.exporter.common.TextFormat
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -28,16 +31,9 @@ fun main() {
     ConsumerRunner(config, ::ktorServer).startBlocking()
 }
 
-fun ktorServer(appName: String): ApplicationEngine =
+fun ktorServer(): ApplicationEngine =
     embeddedServer(CIO, applicationEngineEnvironment {
-        /**
-         * Konfigurasjon av Webserver (Ktor https://ktor.io/)
-         */
-
         val appMicrometerRegistry = defaultRegistry
-
-        val totalCounter = Counter.build().labelNames("slack_channel")
-            .name("spydig_test").help("Total errors.").register()
 
         log = logger
         connector {
@@ -45,12 +41,6 @@ fun ktorServer(appName: String): ApplicationEngine =
         }
         module {
             install(ContentNegotiation) { jackson() }
-            install(CallLogging) {
-                disableDefaultColors()
-                filter { call ->
-                    call.request.path().startsWith("/hello")
-                }
-            }
             install(MicrometerMetrics) {
                 registry = PrometheusMeterRegistry(
                     PrometheusConfig.DEFAULT,
@@ -60,18 +50,6 @@ fun ktorServer(appName: String): ApplicationEngine =
             }
 
             routing {
-                get("/") {
-                    call.respondText(
-                        "<html><h1>$appName</h1><html>",
-                        ContentType.Text.Html
-                    )
-                }
-
-                get("/hello") {
-                    totalCounter.labels("#spydig-test").inc()
-                    call.respondText("Hello")
-                }
-
                 get("/metrics") {
                     call.respondTextWriter(ContentType.parse(TextFormat.CONTENT_TYPE_004)) {
                         TextFormat.write004(this, appMicrometerRegistry.metricFamilySamples())
