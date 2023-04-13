@@ -18,8 +18,8 @@ spec:
     max: 1
     min: 1
   ingresses:
-  { { #each ingresses as |url|}}
-      - {{url } }
+  {{#each ingresses as |url|}}
+    - {{url}}
   {{/each}}
   kafka:
     pool: {{kafka-pool}}
