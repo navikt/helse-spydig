@@ -6,6 +6,11 @@ metadata:
   labels:
     team: tbd
 spec:
+  accessPolicy:
+    outbound:
+      external:
+        - host: slack.com
+        - host: api.slack.com
   route:
     group_by: [ slack_channel ]
     repeatInterval: 24h
