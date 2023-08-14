@@ -70,8 +70,8 @@ class Consumer(
     private fun handleMessages(value: String) {
         val melding = objectMapper.readTree(value)
         sikkerlogger.info("Leser melding med {}", kv("json", melding.toPrettyString()))
-        if(melding["eventName"].isNull || melding["eventName"].asText() != "subsumsjon") {
-            logger.info("melding id: {}, eventName: {} blir ikke validert", melding["id"], melding["eventName"])
+        if (melding.path("eventName").asText() != "subsumsjon") {
+            logger.info("melding id: {}, eventName: {} blir ikke validert", melding.path("id").asText(), melding.path("eventName").asText())
             return
         }
 

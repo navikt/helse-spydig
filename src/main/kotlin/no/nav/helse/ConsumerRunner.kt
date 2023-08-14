@@ -23,6 +23,9 @@ class ConsumerRunner(
             coroutineScope {
                 launch { consumer.start() }
             }
+        } catch (err: Exception) {
+            logger.error("alvorlig feil: ${err.message}", err)
+            sikkerlogger.error("alvorlig feil: ${err.message}", err)
         } finally {
             val gracePeriod = 5000L
             val forcefulShutdownTimeout = 30000L
