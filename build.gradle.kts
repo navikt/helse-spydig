@@ -1,11 +1,11 @@
 
-val kafkaVersion = "3.1.0"
-val ktorVersion = "2.0.2"
-val jsonSchemaValidatorVersion = "1.0.70"
+val kafkaVersion = "3.5.1"
+val ktorVersion = "2.3.4"
+val jsonSchemaValidatorVersion = "1.0.87"
 
 
 plugins {
-    kotlin("jvm") version "1.6.21"
+    kotlin("jvm") version "1.9.10"
     application
 }
 
@@ -22,8 +22,8 @@ dependencies {
     testImplementation(kotlin("test"))
     implementation("org.apache.kafka:kafka-clients:$kafkaVersion")
     implementation("org.slf4j:slf4j-api:1.7.36")
-    implementation("ch.qos.logback:logback-classic:1.2.11")
-    implementation("net.logstash.logback:logstash-logback-encoder:7.2")
+    implementation("ch.qos.logback:logback-classic:1.4.11")
+    implementation("net.logstash.logback:logstash-logback-encoder:7.4")
 
     implementation("io.ktor:ktor-server-core:$ktorVersion")
     implementation("io.ktor:ktor-server-cio:$ktorVersion")
@@ -37,7 +37,7 @@ dependencies {
     implementation("com.networknt:json-schema-validator:$jsonSchemaValidatorVersion")
 
 
-    api("io.micrometer:micrometer-registry-prometheus:1.9.0")
+    api("io.micrometer:micrometer-registry-prometheus:1.11.4")
 
 
 }
@@ -70,9 +70,8 @@ tasks {
             configurations.runtimeClasspath.get()
                 .filter { it.name != "app.jar" }
                 .forEach {
-                    val file = File("$buildDir/libs/${it.name}")
-                    if (!file.exists())
-                        it.copyTo(file)
+                    val file = File("${layout.buildDirectory.get()}/libs/${it.name}")
+                    if (!file.exists()) it.copyTo(file)
                 }
         }
     }
