@@ -5,7 +5,7 @@ val jsonSchemaValidatorVersion = "1.0.87"
 
 
 plugins {
-    kotlin("jvm") version "1.9.10"
+    kotlin("jvm") version "1.9.22"
     application
 }
 
@@ -42,14 +42,13 @@ dependencies {
 
 }
 
-tasks {
-    compileKotlin {
-        kotlinOptions.jvmTarget = "17"
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
     }
+}
 
-    compileTestKotlin {
-        kotlinOptions.jvmTarget = "17"
-    }
+tasks {
     withType<Test> {
         useJUnitPlatform()
         testLogging {
