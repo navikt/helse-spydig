@@ -1,7 +1,7 @@
 
-val kafkaVersion = "3.5.1"
-val ktorVersion = "2.3.4"
-val jsonSchemaValidatorVersion = "1.0.87"
+val kafkaVersion = "3.6.1"
+val ktorVersion = "2.3.7"
+val jsonSchemaValidatorVersion = "1.2.0"
 
 
 plugins {
@@ -21,8 +21,8 @@ repositories {
 dependencies {
     testImplementation(kotlin("test"))
     implementation("org.apache.kafka:kafka-clients:$kafkaVersion")
-    implementation("org.slf4j:slf4j-api:1.7.36")
-    implementation("ch.qos.logback:logback-classic:1.4.11")
+    implementation("org.slf4j:slf4j-api:2.0.11")
+    implementation("ch.qos.logback:logback-classic:1.4.14")
     implementation("net.logstash.logback:logstash-logback-encoder:7.4")
 
     implementation("io.ktor:ktor-server-core:$ktorVersion")
@@ -37,9 +37,10 @@ dependencies {
     implementation("com.networknt:json-schema-validator:$jsonSchemaValidatorVersion")
 
 
-    api("io.micrometer:micrometer-registry-prometheus:1.11.4")
+    api("io.micrometer:micrometer-registry-prometheus:1.12.2")
 
-
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 java {
