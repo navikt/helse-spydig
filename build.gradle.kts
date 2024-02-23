@@ -37,7 +37,7 @@ dependencies {
     implementation("com.networknt:json-schema-validator:$jsonSchemaValidatorVersion")
 
 
-    api("io.micrometer:micrometer-registry-prometheus:1.12.2")
+    api("io.micrometer:micrometer-registry-prometheus:1.12.3")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
