@@ -21,8 +21,6 @@ spec:
     outbound:
       external:
         - host: raw.githubusercontent.com
-        - host: slack.com
-        - host: api.slack.com
   kafka:
     pool: {{kafka-pool}}
   prometheus:
