@@ -28,10 +28,6 @@ spec:
     path: /metrics
   secureLogs:
     enabled: true
-  observability:
-    autoInstrumentation:
-      enabled: true
-      runtime: java
   env:
     - name: SUBSUMSJON_TOPIC
       value: "flex.omrade-helse-etterlevelse"
