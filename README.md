@@ -1,6 +1,6 @@
 # 🤮 SPYDIG 🤮
 
-Applikasjon som validerer subsumsjonsmeldinger ~~og sender varsler om de har feil format~~. 
+Applikasjon som validerer subsumsjonsmeldinger.
 
 ## Henvendelser
 Spørsmål knyttet til koden eller prosjektet kan stilles som issues her på GitHub
