@@ -2,7 +2,7 @@
 val kafkaVersion = "3.6.1"
 val ktorVersion = "2.3.12"
 val jsonSchemaValidatorVersion = "1.2.0"
-
+val junitJupiterVersion = "5.11.3"
 
 plugins {
     kotlin("jvm") version "2.0.21"
@@ -39,7 +39,7 @@ dependencies {
 
     api("io.micrometer:micrometer-registry-prometheus:1.12.3")
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
