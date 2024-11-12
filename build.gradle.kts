@@ -1,6 +1,6 @@
 
 val kafkaVersion = "3.6.1"
-val ktorVersion = "2.3.12"
+val ktorVersion = "3.0.1"
 val jsonSchemaValidatorVersion = "1.2.0"
 val junitJupiterVersion = "5.11.3"
 

@@ -1,13 +1,14 @@
 package no.nav.helse
 
-import io.ktor.server.engine.ApplicationEngine
+import io.ktor.server.cio.CIOApplicationEngine
+import io.ktor.server.engine.EmbeddedServer
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class ConsumerRunner(
     config: Config,
-    builder: () -> ApplicationEngine,
+    builder: () -> EmbeddedServer<CIOApplicationEngine, CIOApplicationEngine.Configuration>,
 ) {
 
     private val consumer = Consumer(config, config.topic)
