@@ -5,7 +5,7 @@ val jsonSchemaValidatorVersion = "1.2.0"
 
 
 plugins {
-    kotlin("jvm") version "1.9.22"
+    kotlin("jvm") version "2.0.21"
     application
 }
 
