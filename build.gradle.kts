@@ -3,6 +3,7 @@ val kafkaVersion = "3.9.0"
 val ktorVersion = "3.0.1"
 val jsonSchemaValidatorVersion = "1.2.0"
 val junitJupiterVersion = "5.11.3"
+val jacksonVersion = "2.18.1"
 
 plugins {
     kotlin("jvm") version "2.0.21"
@@ -19,7 +20,12 @@ repositories {
 }
 
 dependencies {
-    testImplementation(kotlin("test"))
+    constraints {
+        implementation("com.fasterxml.jackson:jackson-bom:$jacksonVersion") {
+            because("Alle moduler skal bruke samme versjon av jackson")
+        }
+    }
+
     implementation("org.apache.kafka:kafka-clients:$kafkaVersion")
     implementation("org.slf4j:slf4j-api:2.0.11")
     implementation("ch.qos.logback:logback-classic:1.5.12")
