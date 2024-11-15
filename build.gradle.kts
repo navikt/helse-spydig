@@ -4,13 +4,13 @@ val ktorVersion = "3.0.1"
 val jsonSchemaValidatorVersion = "1.2.0"
 val junitJupiterVersion = "5.11.3"
 val jacksonVersion = "2.18.1"
+val logbackClassicVersion = "1.5.12"
+val logbackEncoderVersion = "8.0"
 
 plugins {
     kotlin("jvm") version "2.0.21"
     application
 }
-
-
 
 group = "no.nav.helse"
 version = "1.0-SNAPSHOT"
@@ -27,9 +27,8 @@ dependencies {
     }
 
     implementation("org.apache.kafka:kafka-clients:$kafkaVersion")
-    implementation("org.slf4j:slf4j-api:2.0.11")
-    implementation("ch.qos.logback:logback-classic:1.5.12")
-    implementation("net.logstash.logback:logstash-logback-encoder:8.0")
+    implementation("ch.qos.logback:logback-classic:$logbackClassicVersion")
+    implementation("net.logstash.logback:logstash-logback-encoder:$logbackEncoderVersion")
 
     implementation("io.ktor:ktor-server-core:$ktorVersion")
     implementation("io.ktor:ktor-server-cio:$ktorVersion")
