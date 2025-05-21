@@ -31,3 +31,7 @@ spec:
   env:
     - name: SUBSUMSJON_TOPIC
       value: "flex.omrade-helse-etterlevelse"
+  observability:
+    logging:
+      destinations:
+        - id: elastic
