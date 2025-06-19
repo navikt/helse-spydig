@@ -19,6 +19,9 @@ spec:
     min: 1
   accessPolicy:
     outbound:
+      rules:
+        - application: logging
+          namespace: nais-system
       external:
         - host: raw.githubusercontent.com
   kafka:
