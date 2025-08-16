@@ -8,7 +8,7 @@ val logbackClassicVersion = "1.5.12"
 val logbackEncoderVersion = "8.0"
 
 plugins {
-    kotlin("jvm") version "2.2.0"
+    kotlin("jvm") version "2.2.10"
     application
 }
 
