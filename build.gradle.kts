@@ -4,7 +4,7 @@ val ktorVersion = "3.2.3"
 val jsonSchemaValidatorVersion = "1.2.0"
 val junitJupiterVersion = "6.0.2"
 val jacksonVersion = "2.18.3"
-val logbackClassicVersion = "1.5.18"
+val logbackClassicVersion = "1.5.25"
 val logbackEncoderVersion = "8.0"
 
 plugins {
