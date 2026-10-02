@@ -6,7 +6,6 @@ metadata:
   labels:
     team: tbd
 spec:
-  image: {{image}}
   port: 8080
   strategy:
     type: Recreate
@@ -30,8 +29,6 @@ spec:
           namespace: nais-system
       external:
         - host: raw.githubusercontent.com
-  kafka:
-    pool: {{kafka-pool}}
   prometheus:
     enabled: true
     path: /metrics

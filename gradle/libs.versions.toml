@@ -1,0 +1,29 @@
+[versions]
+sykepengerGradlePlugins = "20261001.1830"
+
+[libraries]
+json-schema-validator = "com.networknt:json-schema-validator:1.2.0"
+kafka-clients = { module = "org.apache.kafka:kafka-clients" }
+ktor-client-cio = { module = "io.ktor:ktor-client-cio" }
+ktor-serialization-jackson = { module = "io.ktor:ktor-serialization-jackson" }
+ktor-server-callLogging = { module = "io.ktor:ktor-server-call-logging" }
+ktor-server-cio = { module = "io.ktor:ktor-server-cio" }
+ktor-server-contentNegotiation = { module = "io.ktor:ktor-server-content-negotiation" }
+ktor-server-core = { module = "io.ktor:ktor-server-core" }
+ktor-server-metricsMicrometer = { module = "io.ktor:ktor-server-metrics-micrometer" }
+logback-classic = { module = "ch.qos.logback:logback-classic" }
+logstash-logback-encoder = "net.logstash.logback:logstash-logback-encoder:8.0"
+micrometer-registry-prometheus-simpleclient = { module = "io.micrometer:micrometer-registry-prometheus-simpleclient" }
+
+[bundles]
+ktor-server = [
+    "ktor-serialization-jackson",
+    "ktor-server-callLogging",
+    "ktor-server-cio",
+    "ktor-server-contentNegotiation",
+    "ktor-server-core",
+    "ktor-server-metricsMicrometer",
+]
+
+[plugins]
+sykepenger-deployable = { id = "no.nav.sykepenger.deployable", version.ref = "sykepengerGradlePlugins" }
