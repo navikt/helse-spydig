@@ -12,7 +12,7 @@ ktor-server-contentNegotiation = { module = "io.ktor:ktor-server-content-negotia
 ktor-server-core = { module = "io.ktor:ktor-server-core" }
 ktor-server-metricsMicrometer = { module = "io.ktor:ktor-server-metrics-micrometer" }
 logback-classic = { module = "ch.qos.logback:logback-classic" }
-logstash-logback-encoder = "net.logstash.logback:logstash-logback-encoder:8.0"
+logstash-logback-encoder = "net.logstash.logback:logstash-logback-encoder:9.0"
 micrometer-registry-prometheus-simpleclient = { module = "io.micrometer:micrometer-registry-prometheus-simpleclient" }
 
 [bundles]
