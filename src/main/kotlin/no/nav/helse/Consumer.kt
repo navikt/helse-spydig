@@ -13,7 +13,7 @@ private const val DEFAULT_CHANNEL = "#team-bømlo-alerts"
 
 class Consumer(
     private val config: Config,
-    clientId: String = UUID.randomUUID().toString().slice(1..5)
+    clientId: String = UUID.randomUUID().toString().slice(1..5),
 ) {
     private val consumer =
         KafkaConsumer(config.consumerConfig(clientId, config.consumerGroup), StringDeserializer(), StringDeserializer())
@@ -21,8 +21,13 @@ class Consumer(
     private val validator = JsonSchemaValidator()
 
     companion object {
-        private val total_counter = Counter.build().labelNames("slack_channel", "failing_app")
-            .name("spydig_validation_errors_total").help("Total errors.").register()
+        private val total_counter =
+            Counter
+                .build()
+                .labelNames("slack_channel", "failing_app")
+                .name("spydig_validation_errors_total")
+                .help("Total errors.")
+                .register()
     }
 
     private fun consumeMessages() {
@@ -55,8 +60,8 @@ class Consumer(
     private val objectMapper = jacksonObjectMapper()
 
     // team sykmelding er eneste som skiller på alerts fra spydig i dev og prod
-    private fun teamTilKanaler(sykmelding: String) : Map<String, String> {
-        return mapOf(
+    private fun teamTilKanaler(sykmelding: String): Map<String, String> =
+        mapOf(
             "spleis" to "#team-bømlo-alerts",
             "syfosmregler" to sykmelding,
             "syfosoknad" to "#flex",
@@ -64,7 +69,6 @@ class Consumer(
             "syfosmpapirregler" to sykmelding,
             "riskvurderer-sykdom" to "#helse-risk-alerts",
         )
-    }
 
     private fun handleMessages(value: String) {
         sikkerlogger.info("Leser melding med {}", value)

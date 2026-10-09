@@ -10,7 +10,6 @@ class ConsumerRunner(
     config: Config,
     builder: () -> EmbeddedServer<CIOApplicationEngine, CIOApplicationEngine.Configuration>,
 ) {
-
     private val consumer = Consumer(config, config.topic)
     private val ktor = builder()
 

@@ -28,13 +28,17 @@ fun main() {
 }
 
 fun ktorServer(meterRegistry: PrometheusMeterRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT, CollectorRegistry.defaultRegistry, SYSTEM)) =
-    embeddedServer(CIO, applicationEnvironment {
-        log = logger
-    }, configure = {
-        connector {
-            port = 8080
-        }
-    }) {
+    embeddedServer(
+        CIO,
+        applicationEnvironment {
+            log = logger
+        },
+        configure = {
+            connector {
+                port = 8080
+            }
+        },
+    ) {
         install(ContentNegotiation) { jackson() }
         install(MicrometerMetrics) {
             registry = meterRegistry
