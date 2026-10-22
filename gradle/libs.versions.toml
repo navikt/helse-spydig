@@ -2,7 +2,7 @@
 sykepengerGradlePlugins = "20261001.1830"
 
 [libraries]
-json-schema-validator = "com.networknt:json-schema-validator:1.2.0"
+json-schema-validator = "com.networknt:json-schema-validator:3.0.7"
 kafka-clients = { module = "org.apache.kafka:kafka-clients" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio" }
 ktor-serialization-jackson = { module = "io.ktor:ktor-serialization-jackson" }
