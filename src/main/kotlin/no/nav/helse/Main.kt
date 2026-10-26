@@ -1,6 +1,6 @@
 package no.nav.helse
 
-import io.ktor.serialization.jackson.jackson
+import io.ktor.serialization.jackson3.jackson
 import io.ktor.server.application.install
 import io.ktor.server.cio.CIO
 import io.ktor.server.engine.applicationEnvironment
