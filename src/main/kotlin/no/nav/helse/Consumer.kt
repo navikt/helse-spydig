@@ -1,10 +1,10 @@
 package no.nav.helse
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.prometheus.client.Counter
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.errors.WakeupException
 import org.apache.kafka.common.serialization.StringDeserializer
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import java.time.Duration
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
@@ -73,13 +73,13 @@ class Consumer(
     private fun handleMessages(value: String) {
         sikkerlogger.info("Leser melding med {}", value)
         val melding = objectMapper.readTree(value)
-        if (melding.path("eventName").asText() != "subsumsjon") {
-            logger.info("melding id: {}, eventName: {} blir ikke validert", melding.path("id").asText(), melding.path("eventName").asText())
+        if (melding.path("eventName").asString("") != "subsumsjon") {
+            logger.info("melding id: {}, eventName: {} blir ikke validert", melding.path("id").asString(""), melding.path("eventName").asString(""))
             return
         }
 
         validator.errors(melding)?.let {
-            val kilde = melding.get("kilde")?.asText() ?: "null"
+            val kilde = melding.path("kilde").asString("null")
             val id = melding.get("id")
             logger.warn("fant feil i melding id: {}, kilde: {}, feil: {}", id, kilde, it)
             sikkerlogger.warn("fant feil: {}, melding: {}", it, value)

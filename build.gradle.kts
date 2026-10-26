@@ -15,6 +15,7 @@ dependencies {
 
     implementation(libs.bundles.ktor.server)
     implementation(libs.ktor.client.cio)
+    implementation(libs.jackson.module.kotlin)
     implementation(libs.json.schema.validator)
 
     api(libs.micrometer.registry.prometheus.simpleclient)
