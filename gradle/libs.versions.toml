@@ -1,5 +1,5 @@
 [versions]
-sykepengerGradlePlugins = "20261028.1441"
+sykepengerGradlePlugins = "20261029.1945"
 
 [libraries]
 jackson-module-kotlin = { module = "tools.jackson.module:jackson-module-kotlin" }
