@@ -3,7 +3,7 @@ sykepengerGradlePlugins = "20261029.1945"
 
 [libraries]
 jackson-module-kotlin = { module = "tools.jackson.module:jackson-module-kotlin" }
-json-schema-validator = "com.networknt:json-schema-validator:3.0.8"
+json-schema-validator = "com.networknt:json-schema-validator:3.0.9"
 kafka-clients = { module = "org.apache.kafka:kafka-clients" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio" }
 ktor-serialization-jackson3 = { module = "io.ktor:ktor-serialization-jackson3" }
